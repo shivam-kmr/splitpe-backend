@@ -1,4 +1,4 @@
-const Friend = require('../models/friends.model');
+const { friends: Friend } = require('../models');
 
 const createFriend = async (friendBody) => {
   return Friend.create(friendBody);

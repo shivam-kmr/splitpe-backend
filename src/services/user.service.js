@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { User } = require('../models');
+const { user: User } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -43,6 +43,7 @@ const getUserById = async (id) => {
  * @returns {Promise<User>}
  */
 const getUserByEmail = async (email) => {
+  console.log({User})
   return User.findOne({ email });
 };
 

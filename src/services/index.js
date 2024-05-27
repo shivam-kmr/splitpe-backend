@@ -1,9 +1,12 @@
-let serviceNames = ["auth", "email", "token", "user", "expense"]
-serviceNames.forEach(service => {
-    module.exports[`${service}Service`] = require(`./${service}.service`);
-})
-// module.exports.authService = require('./auth.service');
-// module.exports.emailService = require('./email.service');
-// module.exports.tokenService = require('./token.service');
-// module.exports.userService = require('./user.service');
-// module.exports.expenseService = require('./expense.service');
+const fs = require('fs');
+const path = require('path');
+const services = {};
+fs.readdirSync(__dirname).forEach(file => {
+  if (file === 'index.js') return;
+  const ext = path.extname(file);
+  if (ext === '.js') {
+    const moduleName = path.basename(file, ext).split(".")[0];
+    services[moduleName + "Service"] = require(path.join(__dirname, file));
+  }
+});
+module.exports = services;

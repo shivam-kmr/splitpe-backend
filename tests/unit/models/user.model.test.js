@@ -1,5 +1,5 @@
 const faker = require('faker');
-const { User } = require('../../../src/models');
+const { user: User } = require('../../../src/models');
 
 describe('User model', () => {
   describe('User validation', () => {

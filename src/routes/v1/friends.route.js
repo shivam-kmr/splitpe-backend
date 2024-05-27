@@ -5,6 +5,12 @@ const friendController = require('../../controllers/friend.controller');
 
 const router = express.Router();
 
+router.post('/', validate(friendValidation.createFriend), friendController.createFriend);
+router.get('/', friendController.getAllFriends);
+router.get('/:friendId', friendController.getFriendById);
+router.put('/:friendId', validate(friendValidation.updateFriend), friendController.updateFriend);
+router.delete('/:friendId', friendController.deleteFriend);
+
 /**
  * @swagger
  * tags:
@@ -35,7 +41,6 @@ const router = express.Router();
  *         $ref: '#/components/responses/BadRequest'
  */
 
-router.post('/create', validate(friendValidation.createFriend), friendController.createFriend);
 
 /**
  * @swagger
@@ -53,8 +58,6 @@ router.post('/create', validate(friendValidation.createFriend), friendController
  *               items:
  *                 $ref: '#/components/schemas/Friend'
  */
-
-router.get('/', friendController.getAllFriends);
 
 /**
  * @swagger
@@ -79,8 +82,6 @@ router.get('/', friendController.getAllFriends);
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
-
-router.get('/:friendId', friendController.getFriendById);
 
 /**
  * @swagger
@@ -114,7 +115,7 @@ router.get('/:friendId', friendController.getFriendById);
  *         $ref: '#/components/responses/NotFound'
  */
 
-router.put('/:friendId', validate(friendValidation.updateFriend), friendController.updateFriend);
+
 
 /**
  * @swagger
@@ -135,7 +136,5 @@ router.put('/:friendId', validate(friendValidation.updateFriend), friendControll
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  */
-
-router.delete('/:friendId', friendController.deleteFriend);
 
 module.exports = router;

@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Expense } = require('../models');
+const { expense: Expense } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
