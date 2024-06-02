@@ -1,29 +1,73 @@
-const { friends: Friend } = require('../models');
+const httpStatus = require('http-status');
+const { Friend } = require('../models');
+const ApiError = require('../utils/ApiError');
 
-const createFriend = async (friendBody) => {
+/**
+ * Add a friend
+ * @param {Object} friendBody
+ * @returns {Promise<Friend>}
+ */
+const addFriend = async (friendBody) => {
   return Friend.create(friendBody);
 };
 
-const getAllFriends = async () => {
-  return Friend.find();
+/**
+ * Query for friends
+ * @param {Object} filter - Mongo filter
+ * @param {Object} options - Query options
+ * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
+ * @param {number} [options.limit] - Maximum number of results per page (default = 10)
+ * @param {number} [options.page] - Current page (default = 1)
+ * @returns {Promise<QueryResult>}
+ */
+const queryFriends = async (filter, options) => {
+  const friends = await Friend.paginate(filter, options);
+  return friends;
 };
 
-const getFriendById = async (friendId) => {
-  return Friend.findById(friendId);
+/**
+ * Get friend by id
+ * @param {ObjectId} id
+ * @returns {Promise<Friend>}
+ */
+const getFriendById = async (id) => {
+  return Friend.findById(id);
 };
 
-const updateFriend = async (friendId, updateBody) => {
-  return Friend.findByIdAndUpdate(friendId, updateBody, { new: true });
+/**
+ * Update friend by id
+ * @param {ObjectId} friendId
+ * @param {Object} updateBody
+ * @returns {Promise<Friend>}
+ */
+const updateFriendById = async (friendId, updateBody) => {
+  const friend = await getFriendById(friendId);
+  if (!friend) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Friend not found');
+  }
+  Object.assign(friend, updateBody);
+  await friend.save();
+  return friend;
 };
 
-const deleteFriend = async (friendId) => {
-  return Friend.findByIdAndDelete(friendId);
+/**
+ * Delete friend by id
+ * @param {ObjectId} friendId
+ * @returns {Promise<Friend>}
+ */
+const deleteFriendById = async (friendId) => {
+  const friend = await getFriendById(friendId);
+  if (!friend) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Friend not found');
+  }
+  await friend.remove();
+  return friend;
 };
 
 module.exports = {
-  createFriend,
-  getAllFriends,
+  addFriend,
+  queryFriends,
   getFriendById,
-  updateFriend,
-  deleteFriend,
+  updateFriendById,
+  deleteFriendById,
 };

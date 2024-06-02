@@ -1,38 +1,38 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const friendValidation = require('../../validations/friends.validation');
-const friendController = require('../../controllers/friend.controller');
+const groupValidation = require('../../validations/group.validation');
+const groupController = require('../../controllers/group.controller');
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(auth('manageFriends'), validate(friendValidation.addFriend), friendController.addFriend)
-  .get(auth('getFriends'), validate(friendValidation.getFriends), friendController.getFriends);
+  .post(auth('manageGroups'), validate(groupValidation.createGroup), groupController.createGroup)
+  .get(auth('getGroups'), validate(groupValidation.getGroups), groupController.getGroups);
 
 router
-  .route('/:friendId')
-  .get(auth('getFriends'), validate(friendValidation.getFriend), friendController.getFriend)
-  .patch(auth('manageFriends'), validate(friendValidation.updateFriend), friendController.updateFriend)
-  .delete(auth('manageFriends'), validate(friendValidation.deleteFriend), friendController.deleteFriend);
+  .route('/:groupId')
+  .get(auth('getGroups'), validate(groupValidation.getGroup), groupController.getGroup)
+  .patch(auth('manageGroups'), validate(groupValidation.updateGroup), groupController.updateGroup)
+  .delete(auth('manageGroups'), validate(groupValidation.deleteGroup), groupController.deleteGroup);
 
 module.exports = router;
 
 /**
  * @swagger
  * tags:
- *   name: Friends
- *   description: Friend management and retrieval
+ *   name: Groups
+ *   description: Group management and retrieval
  */
 
 /**
  * @swagger
- * /friends:
+ * /groups:
  *   post:
- *     summary: Add a friend
- *     description: Only authenticated users can add friends.
- *     tags: [Friends]
+ *     summary: Create a group
+ *     description: Only authenticated users can create groups.
+ *     tags: [Groups]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -42,45 +42,42 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - userId
- *               - friendId
+ *               - name
+ *               - members
  *             properties:
- *               userId:
+ *               name:
  *                 type: string
- *               friendId:
- *                 type: string
+ *               members:
+ *                 type: array
+ *                 items:
+ *                   type: string
  *             example:
- *               userId: user123
- *               friendId: friend456
+ *               name: Trip to Paris
+ *               members: [user1, user2, user3]
  *     responses:
  *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Friend'
+ *                $ref: '#/components/schemas/Group'
  *       "400":
  *         $ref: '#/components/responses/BadRequest'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *
  *   get:
- *     summary: Get all friends
- *     description: Only authenticated users can retrieve their friends.
- *     tags: [Friends]
+ *     summary: Get all groups
+ *     description: Only authenticated users can retrieve their groups.
+ *     tags: [Groups]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
- *         name: userId
+ *         name: name
  *         schema:
  *           type: string
- *         description: User ID
- *       - in: query
- *         name: friendId
- *         schema:
- *           type: string
- *         description: Friend ID
+ *         description: Group name
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -111,7 +108,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Friend'
+ *                     $ref: '#/components/schemas/Group'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -130,45 +127,45 @@ module.exports = router;
 
 /**
  * @swagger
- * /friends/{friendId}:
+ * /groups/{groupId}:
  *   get:
- *     summary: Get a friend
- *     description: Only authenticated users can fetch their friends by ID.
- *     tags: [Friends]
+ *     summary: Get a group
+ *     description: Only authenticated users can fetch their groups by ID.
+ *     tags: [Groups]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: friendId
+ *         name: groupId
  *         required: true
  *         schema:
  *           type: string
- *         description: Friend ID
+ *         description: Group ID
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Friend'
+ *                $ref: '#/components/schemas/Group'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a friend
- *     description: Only authenticated users can update their friends.
- *     tags: [Friends]
+ *     summary: Update a group
+ *     description: Only authenticated users can update their groups.
+ *     tags: [Groups]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: friendId
+ *         name: groupId
  *         required: true
  *         schema:
  *           type: string
- *         description: Friend ID
+ *         description: Group ID
  *     requestBody:
  *       required: true
  *       content:
@@ -176,20 +173,22 @@ module.exports = router;
  *           schema:
  *             type: object
  *             properties:
- *               userId:
+ *               name:
  *                 type: string
- *               friendId:
- *                 type: string
+ *               members:
+ *                 type: array
+ *                 items:
+ *                   type: string
  *             example:
- *               userId: user123
- *               friendId: friend789
+ *               name: Trip to Paris
+ *               members: [user1, user2, user3, user4]
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/Friend'
+ *                $ref: '#/components/schemas/Group'
  *       "400":
  *         $ref: '#/components/responses/BadRequest'
  *       "401":
@@ -198,18 +197,18 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a friend
- *     description: Only authenticated users can delete their friends.
- *     tags: [Friends]
+ *     summary: Delete a group
+ *     description: Only authenticated users can delete their groups.
+ *     tags: [Groups]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: friendId
+ *         name: groupId
  *         required: true
  *         schema:
  *           type: string
- *         description: Friend ID
+ *         description: Group ID
  *     responses:
  *       "204":
  *         description: No content

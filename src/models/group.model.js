@@ -1,18 +1,23 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
-const friendSchema = mongoose.Schema(
+const groupSchema = mongoose.Schema(
   {
-    user: {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
-    friend: {
+    members: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-    },
+    }],
   },
   {
     timestamps: true,
@@ -20,12 +25,12 @@ const friendSchema = mongoose.Schema(
 );
 
 // add plugin that converts mongoose to json
-friendSchema.plugin(toJSON);
-friendSchema.plugin(paginate);
+groupSchema.plugin(toJSON);
+groupSchema.plugin(paginate);
 
 /**
- * @typedef Friend
+ * @typedef Group
  */
-const Friend = mongoose.model('Friend', friendSchema);
+const Group = mongoose.model('Group', groupSchema);
 
-module.exports = Friend;
+module.exports = Group;

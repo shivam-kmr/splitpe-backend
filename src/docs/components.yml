@@ -19,6 +19,100 @@ components:
         name: fake name
         role: user
 
+    Friend:
+      type: object
+      properties:
+        id:
+          type: string
+        user:
+          type: string
+        friend:
+          type: string
+      example:
+        id: 60c72b2f9b1e8b7a8d0f9e4a
+        user: 60c72b2f9b1e8b7a8d0f9e4b
+        friend: 60c72b2f9b1e8b7a8d0f9e4c
+
+    Group:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        members:
+          type: array
+          items:
+            type: string
+      example:
+        id: 60c72b2f9b1e8b7a8d0f9e4d
+        name: Holiday Trip
+        members:
+          - 60c72b2f9b1e8b7a8d0f9e4e
+          - 60c72b2f9b1e8b7a8d0f9e4f
+
+    Expense:
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+        description:
+          type: string
+        date:
+          type: string
+          format: date-time
+        payer:
+          type: string
+        groupId:
+          type: string
+      example:
+        id: 60c72b2f9b1e8b7a8d0f9e50
+        amount: 100
+        description: Dinner at restaurant
+        date: 2023-05-25T18:30:00.000Z
+        payer: 60c72b2f9b1e8b7a8d0f9e4e
+        groupId: 60c72b2f9b1e8b7a8d0f9e4d
+
+    ExpenseSplit:
+      type: object
+      properties:
+        id:
+          type: string
+        expenseId:
+          type: string
+        userId:
+          type: string
+        amount:
+          type: number
+      example:
+        id: 60c72b2f9b1e8b7a8d0f9e51
+        expenseId: 60c72b2f9b1e8b7a8d0f9e50
+        userId: 60c72b2f9b1e8b7a8d0f9e4f
+        amount: 50
+
+    Settlement:
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+        payer:
+          type: string
+        payee:
+          type: string
+        date:
+          type: string
+          format: date-time
+      example:
+        id: 60c72b2f9b1e8b7a8d0f9e52
+        amount: 50
+        payer: 60c72b2f9b1e8b7a8d0f9e4e
+        payee: 60c72b2f9b1e8b7a8d0f9e4f
+        date: 2023-05-25T18:30:00.000Z
+
     Token:
       type: object
       properties:

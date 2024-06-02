@@ -1,27 +1,50 @@
 const Joi = require('joi');
+const { objectId } = require('./custom.validation');
 
-const createFriend = {
+const addFriend = {
   body: Joi.object().keys({
-    name: Joi.string().required(),
-    email: Joi.string().email().required(),
-    phoneNumber: Joi.string().required(),
-    // Add more validations as needed
+    user: Joi.string().required().custom(objectId),
+    friend: Joi.string().required().custom(objectId),
+  }),
+};
+
+const getFriends = {
+  query: Joi.object().keys({
+    user: Joi.string().custom(objectId),
+    sortBy: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
+  }),
+};
+
+const getFriend = {
+  params: Joi.object().keys({
+    friendId: Joi.string().custom(objectId),
   }),
 };
 
 const updateFriend = {
   params: Joi.object().keys({
-    friendId: Joi.string().required(),
+    friendId: Joi.required().custom(objectId),
   }),
-  body: Joi.object().keys({
-    name: Joi.string(),
-    email: Joi.string().email(),
-    phoneNumber: Joi.string(),
-    // Add more validations as needed
+  body: Joi.object()
+    .keys({
+      user: Joi.string().custom(objectId),
+      friend: Joi.string().custom(objectId),
+    })
+    .min(1),
+};
+
+const deleteFriend = {
+  params: Joi.object().keys({
+    friendId: Joi.string().custom(objectId),
   }),
 };
 
 module.exports = {
-  createFriend,
+  addFriend,
+  getFriends,
+  getFriend,
   updateFriend,
+  deleteFriend,
 };

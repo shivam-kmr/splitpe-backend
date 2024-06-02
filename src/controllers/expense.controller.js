@@ -10,13 +10,13 @@ const createExpense = catchAsync(async (req, res) => {
 });
 
 const getExpenses = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['category']);
+  const filter = pick(req.query, ['description', 'payer', 'group', 'date']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await expenseService.queryExpenses(filter, options);
   res.send(result);
 });
 
-const getExpenseById = catchAsync(async (req, res) => {
+const getExpense = catchAsync(async (req, res) => {
   const expense = await expenseService.getExpenseById(req.params.expenseId);
   if (!expense) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Expense not found');
@@ -29,7 +29,7 @@ const updateExpense = catchAsync(async (req, res) => {
   res.send(expense);
 });
 
-const deleteExpenseById = catchAsync(async (req, res) => {
+const deleteExpense = catchAsync(async (req, res) => {
   await expenseService.deleteExpenseById(req.params.expenseId);
   res.status(httpStatus.NO_CONTENT).send();
 });
@@ -37,7 +37,7 @@ const deleteExpenseById = catchAsync(async (req, res) => {
 module.exports = {
   createExpense,
   getExpenses,
-  getExpenseById,
+  getExpense,
   updateExpense,
-  deleteExpenseById,
+  deleteExpense,
 };
