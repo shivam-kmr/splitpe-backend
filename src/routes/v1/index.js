@@ -1,6 +1,7 @@
 const express = require('express');
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
+const healthRoute = require('./health.route');
 const docsRoute = require('./docs.route');
 const expenseRoute = require('./expense.route');
 const friendsRoute = require('./friends.route');
@@ -30,6 +31,11 @@ const defaultRoutes = [
     path: '/group',
     route: groupsRoute,
   },
+  {
+    path: '/health',
+    route: healthRoute,
+  },
+  
 ];
 
 const devRoutes = [
