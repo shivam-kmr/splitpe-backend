@@ -44,6 +44,18 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    gender: {
+      type: String,
+    },
+    email: {
+      type: String,
+    },
+    phone: {
+      type: String,
+    },
+    location:{
+      type: Object
+    }
   },
   {
     timestamps: true,
