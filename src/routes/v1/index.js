@@ -6,6 +6,7 @@ const docsRoute = require('./docs.route');
 const expenseRoute = require('./expense.route');
 const friendsRoute = require('./friends.route');
 const groupsRoute = require('./group.route');
+const categoryRoute = require('./category.route');
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -30,6 +31,10 @@ const defaultRoutes = [
   {
     path: '/group',
     route: groupsRoute,
+  },
+  {
+    path: '/category',
+    route: categoryRoute,
   },
   {
     path: '/health',
