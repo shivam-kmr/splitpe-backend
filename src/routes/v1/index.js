@@ -6,6 +6,8 @@ const docsRoute = require('./docs.route');
 const expenseRoute = require('./expense.route');
 const friendsRoute = require('./friends.route');
 const groupsRoute = require('./group.route');
+const quoteRoute = require('./quote.route');
+const imageuploadRoute = require('./imageupload.route');
 const categoryRoute = require('./category.route');
 const config = require('../../config/config');
 
@@ -40,15 +42,26 @@ const defaultRoutes = [
     path: '/health',
     route: healthRoute,
   },
-  
-];
-
-const devRoutes = [
-  // routes available only in development mode
   {
     path: '/docs',
     route: docsRoute,
   },
+  {
+    path: '/quotes',
+    route: quoteRoute,
+  },
+  {
+    path: '/image',
+    route: imageuploadRoute,
+  }
+];
+
+const devRoutes = [
+  // routes available only in development mode
+  // {
+  //   path: '/docs',
+  //   route: docsRoute,
+  // },
 ];
 
 defaultRoutes.forEach((route) => {
