@@ -10,3 +10,7 @@ yarn-error.log
 
 # Code coverage
 coverage
+*.env
+*.env.example
+*.env.local
+*.env.staging
