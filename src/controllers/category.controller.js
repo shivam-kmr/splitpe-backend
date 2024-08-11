@@ -34,10 +34,16 @@ const deleteCategory = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const uploadCategoryImages = catchAsync(async (req, res) => {
+  const categoryImages = await categoryService.createCategoryImages(req.body);
+  res.status(httpStatus.CREATED).send(categoryImages);
+});
+
 module.exports = {
   createCategory,
   getCategorys,
   getCategory,
   updateCategory,
   deleteCategory,
+  uploadCategoryImages
 };

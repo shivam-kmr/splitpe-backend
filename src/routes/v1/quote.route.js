@@ -11,14 +11,14 @@ const upload = multer({ dest: 'uploads/' }); // Configure multer for file upload
 
 router
   .route('/')
-  .post(validate(quoteValidation.createQuote), quotesController.createQuote)
-  .get(validate(quoteValidation.getQuotes), quotesController.getQuotes);
+  .post(auth("manageQuotes"),validate(quoteValidation.createQuote), quotesController.createQuote)
+  .get(auth("getQuotes"),validate(quoteValidation.getQuotes), quotesController.getQuotes);
 
 router
   .route('/:quoteId')
-  .get(validate(quoteValidation.getQuote), quotesController.getQuote)
-  .patch(validate(quoteValidation.updateQuote), quotesController.updateQuote)
-  .delete(validate(quoteValidation.deleteQuote), quotesController.deleteQuote);
+  .get(auth("getQuotes"),validate(quoteValidation.getQuote), quotesController.getQuote)
+  .patch(auth("manageQuotes"),validate(quoteValidation.updateQuote), quotesController.updateQuote)
+  .delete(auth("manageQuotes"),validate(quoteValidation.deleteQuote), quotesController.deleteQuote);
 
 router
     .route('/upload')

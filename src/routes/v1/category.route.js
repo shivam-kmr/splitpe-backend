@@ -17,6 +17,10 @@ router
   .patch(auth('manageCategory'), validate(categoryValidation.updateCategory), categoryController.updateCategory)
   .delete(auth('manageCategory'), validate(categoryValidation.deleteCategory), categoryController.deleteCategory);
 
+router
+  .route('/:categoryId/image')
+  .post(auth('manageCategory'), validate(categoryValidation.uploadCategoryImages), categoryController.uploadCategoryImages);
+
 module.exports = router;
 
 /**

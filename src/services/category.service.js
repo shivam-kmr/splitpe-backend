@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { category: Category } = require('../models');
+const { category: Category, categoryimages: CategoryImages } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -74,6 +74,10 @@ const deleteCategoryById = async (categoryId) => {
   return category;
 };
 
+const createCategoryImages = async (categoryBody) => {
+  return CategoryImages.create(categoryBody);
+};
+
 module.exports = {
   createCategory,
   queryCategory,
@@ -81,4 +85,5 @@ module.exports = {
   getCategoryByEmail,
   updateCategoryById,
   deleteCategoryById,
+  createCategoryImages
 };

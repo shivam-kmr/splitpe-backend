@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { toJSON, paginate } = require('./plugins');
 
 const quoteSchema = mongoose.Schema(
   {
@@ -21,6 +22,8 @@ const quoteSchema = mongoose.Schema(
     timestamps: true,
   }
 );
+quoteSchema.plugin(toJSON);
+quoteSchema.plugin(paginate);
 
 const Quote = mongoose.model('Quote', quoteSchema);
 

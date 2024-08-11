@@ -1,6 +1,7 @@
 const fs = require('fs');
 const csv = require('csv-parser');
 const httpStatus = require('http-status');
+const pick = require('../utils/pick');
 const catchAsync = require('../utils/catchAsync');
 const { quoteService } = require('../services');
 
@@ -11,16 +12,18 @@ const createQuote = catchAsync(async (req, res) => {
 });
 
 const getQuotes = catchAsync(async (req, res) => {
-    const quotes = await quoteService.getQuotes(req.query);
-    res.status(httpStatus.OK).send(quotes);
-});
-
+    const filter = pick(req.query, ['','']);
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const result = await quoteService.queryQuotes(filter, options);
+    res.send(result);
+  });
+  
 const getQuote = catchAsync(async (req, res) => {
-    const quote = await quoteService.getQuoteById(req.params.quoteId);
-    if (!quote) {
+    const notification = await quoteService.getQuoteById(req.params.quoteId);
+    if (!notification) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Quote not found');
     }
-    res.status(httpStatus.OK).send(quote);
+    res.send(notification);
 });
 
 const updateQuote = catchAsync(async (req, res) => {

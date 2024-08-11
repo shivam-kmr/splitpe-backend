@@ -35,6 +35,15 @@ const deleteCategory = {
     categoryId: Joi.string().custom(objectId),
   }),
 };
+const uploadCategoryImages = {
+  params: Joi.object().keys({
+    categoryId: Joi.string().custom(objectId),
+  }),
+  body: Joi.object().keys({
+    categoryId: Joi.string().custom(objectId),
+    imageUrl: Joi.string().required(),
+  }),
+}
 
 module.exports = {
   createCategory,
@@ -42,4 +51,5 @@ module.exports = {
   getCategory,
   updateCategory,
   deleteCategory,
+  uploadCategoryImages
 };
