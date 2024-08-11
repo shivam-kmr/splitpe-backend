@@ -34,6 +34,13 @@ const deleteCategory = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const getCategoryImages = catchAsync(async (req, res) => {
+  const filter = pick(req.params, ['categoryId']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const result = await categoryService.getCategoryImages(filter, options);
+  res.status(httpStatus.CREATED).send(result);
+});
+
 const uploadCategoryImages = catchAsync(async (req, res) => {
   const categoryImages = await categoryService.createCategoryImages(req.body);
   res.status(httpStatus.CREATED).send(categoryImages);
@@ -45,5 +52,6 @@ module.exports = {
   getCategory,
   updateCategory,
   deleteCategory,
+  getCategoryImages,
   uploadCategoryImages
 };

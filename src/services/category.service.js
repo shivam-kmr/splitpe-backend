@@ -78,6 +78,11 @@ const createCategoryImages = async (categoryBody) => {
   return CategoryImages.create(categoryBody);
 };
 
+const getCategoryImages = async (filter, options) => {
+  const categorys = await CategoryImages.paginate(filter, options);
+  return categorys;
+};
+
 module.exports = {
   createCategory,
   queryCategory,
@@ -85,5 +90,6 @@ module.exports = {
   getCategoryByEmail,
   updateCategoryById,
   deleteCategoryById,
+  getCategoryImages,
   createCategoryImages
 };

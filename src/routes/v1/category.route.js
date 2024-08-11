@@ -19,6 +19,7 @@ router
 
 router
   .route('/:categoryId/image')
+  .get(auth('getCategory'), validate(categoryValidation.getCategory), categoryController.getCategoryImages)
   .post(auth('manageCategory'), validate(categoryValidation.uploadCategoryImages), categoryController.uploadCategoryImages);
 
 module.exports = router;
