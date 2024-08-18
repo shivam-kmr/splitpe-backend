@@ -3,7 +3,7 @@ const socialmediaController = require('../../controllers/socialmedia.controller'
 const router = express.Router();
 
 router
-  .route('/')
+  .route('/golive')
   .post(socialmediaController.postToInstagram)
 
 module.exports = router;
