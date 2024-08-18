@@ -42,6 +42,9 @@ const uploadCategoryImages = {
   body: Joi.object().keys({
     categoryId: Joi.string().custom(objectId),
     imageUrl: Joi.string().required(),
+    color: Joi.string().required(),
+    font: Joi.string().required(),
+    fontWeight: Joi.string().required()
   }),
 }
 

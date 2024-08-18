@@ -8,6 +8,8 @@ const friendsRoute = require('./friends.route');
 const groupsRoute = require('./group.route');
 const quoteRoute = require('./quote.route');
 const imageuploadRoute = require('./imageupload.route');
+const socialmediauploaderRoute = require('./socialmediauploader.route');
+const temporaryPostRoute = require('./temporarypost.route');
 const categoryRoute = require('./category.route');
 const config = require('../../config/config');
 
@@ -53,6 +55,14 @@ const defaultRoutes = [
   {
     path: '/image',
     route: imageuploadRoute,
+  },
+  {
+    path: '/socialmedia',
+    route: socialmediauploaderRoute,
+  },
+  {
+    path: '/temporaryposts',
+    route: temporaryPostRoute,
   }
 ];
 

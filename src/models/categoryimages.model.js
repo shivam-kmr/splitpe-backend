@@ -4,14 +4,26 @@ const { toJSON, paginate } = require('./plugins');
 const categoryImagesSchema = mongoose.Schema(
   {
     categoryId: {
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: 'Category',
-        required: true,
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: 'Category',
+      required: true,
     },
     imageUrl: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
+    color: {
+      type: String,
+      required: true,
+    },
+    font: {
+      type: String,
+      required: true,
+    },
+    fontWeight: {
+      type: String,
+      required: true,
+    }
   },
   {
     timestamps: true,
