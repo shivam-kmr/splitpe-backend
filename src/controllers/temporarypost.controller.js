@@ -20,7 +20,7 @@ const createBulkTemporaryPost = catchAsync(async (req, res) => {
 const getTemporaryPost = catchAsync(async (req, res) => {
     const filter = pick(req.query, ['category_id']);
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
-    const result = await temporaryPostService.queryTemporaryPost(filter, options);
+    const result = await temporaryPostService.queryTemporaryPosts(filter, options);
     res.send(result);
   });
   
