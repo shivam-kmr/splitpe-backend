@@ -71,7 +71,8 @@ const uploadPhoto = async (posts) => {
     // Function to handle the upload for a single post
     const uploadSinglePhoto = async (post) => {
         let imageUrl = post.mediaUrl;
-        let caption = post.caption + "\n" + post.hashtags;
+        let caption = `${post.caption}\n${post.hashtags}`;
+        // let caption = post.caption + "\n" + post.hashtags;
 
         try {
             let igresp = await uploadPhotoToInstagram(imageUrl, caption);
