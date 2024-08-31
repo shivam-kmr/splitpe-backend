@@ -3,17 +3,18 @@ const inquirer = require('inquirer');
 const { get } = require('request-promise');
 
 const temporaryPostService = require('./temporarypost.service');
+const categoryService = require('./category.service');
 
-const ig = new IgApiClient();
-
-const loginToInstagram = async () => {
-    ig.state.generateDevice(process.env.IG_USERNAME);
-    // ig.state.proxyUrl = process.env.IG_PROXY;
+const loginToInstagram = async (account) => {
+    const ig = new IgApiClient();
+    let instagramUsername = account.username;
+    let instagramPassword = account.password;
+    ig.state.generateDevice(instagramUsername);
 
     try {
-        const auth = await ig.account.login(process.env.IG_USERNAME, process.env.IG_PASSWORD);
+        const auth = await ig.account.login(instagramUsername, instagramPassword);
         console.log('Logged in:', auth);
-        return auth;
+        return ig;
     } catch (error) {
         if (error instanceof IgCheckpointError) {
             console.log('Checkpoint detected:', ig.state.checkpoint);
@@ -33,9 +34,9 @@ const loginToInstagram = async () => {
 
             await ig.challenge.sendSecurityCode(code);
 
-            const auth = await ig.account.login(process.env.IG_USERNAME, process.env.IG_PASSWORD);
+            const auth = await ig.account.login(instagramUsername, instagramPassword);
             console.log('Logged in after challenge:', auth);
-            return auth;
+            return ig;
 
         } else if (error instanceof IgLoginTwoFactorRequiredError) {
             const { username, totp_two_factor_on, two_factor_identifier } = error.response.body.two_factor_info;
@@ -55,7 +56,7 @@ const loginToInstagram = async () => {
                 trustThisDevice: '1',
             });
             console.log('Logged in with 2FA:', auth);
-            return auth;
+            return ig;
 
         } else {
             console.error('Failed to login:', error);
@@ -64,18 +65,18 @@ const loginToInstagram = async () => {
     }
 };
 
-const uploadPhoto = async (posts) => {
+const uploadPhoto = async (instaAccountInst, posts) => {
     const concurrency = 10; // Set your desired concurrency level
     let response = [];
 
     // Function to handle the upload for a single post
-    const uploadSinglePhoto = async (post) => {
+    const uploadSinglePhoto = async (instaAccountInst, post) => {
         let imageUrl = post.mediaUrl;
         let caption = `${post.caption}\n${post.hashtags}`;
         // let caption = post.caption + "\n" + post.hashtags;
 
         try {
-            let igresp = await uploadPhotoToInstagram(imageUrl, caption);
+            let igresp = await uploadPhotoToInstagram(instaAccountInst, imageUrl, caption);
             if (igresp.success) {
                 await temporaryPostService.updateTemporaryPostById(post.id, { status: 'published', uploadId: igresp.uploadId });
             }
@@ -86,31 +87,31 @@ const uploadPhoto = async (posts) => {
     };
 
     // Function to process the posts in batches
-    const processInBatches = async () => {
+    const processInBatches = async (instaAccountInst) => {
         let index = 0;
 
         while (index < posts.length) {
-            const batch = posts.slice(index, index + concurrency).map(post => uploadSinglePhoto(post));
+            const batch = posts.slice(index, index + concurrency).map(post => uploadSinglePhoto(instaAccountInst, post));
             await Promise.all(batch); // Wait for all uploads in the batch to complete
             index += concurrency;
         }
     };
 
-    await processInBatches();
+    await processInBatches(instaAccountInst);
     console.log('Photo posted successfully!', response);
     return response;
 };
 
 
 
-const uploadPhotoToInstagram = async (imageUrl, caption) => {
+const uploadPhotoToInstagram = async (instaAccountInst, imageUrl, caption) => {
     try {
         const imageBuffer = await get({
             url: imageUrl,
             encoding: null,
         });
 
-        let igresp = await ig.publish.photo({
+        let igresp = await instaAccountInst.publish.photo({
             file: imageBuffer,
             caption: caption,
         });
@@ -126,13 +127,33 @@ const uploadPhotoToInstagram = async (imageUrl, caption) => {
 const postToInstagram = async () => {
     try {
         let postToPublish = await temporaryPostService.getPendingTemporaryPosts();
-        if(postToPublish.length === 0) return { success: false, message: 'No posts to publish' };
-        await loginToInstagram();
-        return await uploadPhoto(postToPublish);
+        if (postToPublish.length === 0) return { success: false, message: 'No posts to publish' };
+
+        // Group posts by category ID
+        postToPublish = postToPublish.reduce((acc, post) => {
+            if (!acc[post.categoryId]) acc[post.categoryId] = [];
+            acc[post.categoryId].push(post);
+            return acc;
+        }, {});
+
+        let res = [];
+
+        // Use for...of to handle async operations
+        for (let categoryId of Object.keys(postToPublish)) {
+            let categoryData = await categoryService.getCategoryById(categoryId);
+            let instaAccountInst = await loginToInstagram({ username: categoryData.email, password: categoryData.password });
+
+            let uploadPhotoResponse = await uploadPhoto(instaAccountInst, postToPublish[categoryId]);
+            res.push({ categoryId, success: true, message: 'Photo posted successfully!', uploadPhotoResponse })
+        }
+
+        return res;  // Make sure to return the result
     } catch (error) {
         console.error('An error occurred during the posting process:', error);
+        return { success: false, message: 'An error occurred during the posting process', error };
     }
 };
+
 
 
 const parseIgUploadResponse = (response) => {

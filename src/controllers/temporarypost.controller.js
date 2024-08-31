@@ -3,11 +3,12 @@ const csv = require('csv-parser');
 const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const catchAsync = require('../utils/catchAsync');
-const { temporarypostService: temporaryPostService } = require('../services');
+const { temporarypostService: temporaryPostService, quoteService: quoteService } = require('../services');
 
 
 const createTemporaryPost = catchAsync(async (req, res) => {
     const quote = await temporaryPostService.createTemporaryPost(req.body);
+    await quoteService.updateQuoteById(req.body.quoteId, { status: "PUBLISHED" });
     res.status(httpStatus.CREATED).send(quote);
 });
 

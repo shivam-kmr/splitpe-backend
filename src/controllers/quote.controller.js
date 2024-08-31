@@ -12,7 +12,7 @@ const createQuote = catchAsync(async (req, res) => {
 });
 
 const getQuotes = catchAsync(async (req, res) => {
-    const filter = pick(req.query, ['category_id']);
+    const filter = pick(req.query, ['category_id', 'status']);
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
     const result = await quoteService.queryQuotes(filter, options);
     res.send(result);

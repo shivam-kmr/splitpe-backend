@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
+const { statusTypes } = require('../config/status');
 
 const quoteSchema = mongoose.Schema(
   {
@@ -7,6 +8,12 @@ const quoteSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    status: {
+      type: String,
+      enum: [statusTypes.NEW, statusTypes.PUBLISHED, statusTypes.DELETED],
+      required: true,
+      default: statusTypes.NEW
+  },
     title: {
       type: String,
       required: true,

@@ -4,6 +4,8 @@ const { password, objectId } = require('./custom.validation');
 const createCategory = {
   body: Joi.object().keys({
     name: Joi.string().required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().required().custom(password),
   }),
 };
 
@@ -41,10 +43,8 @@ const uploadCategoryImages = {
   }),
   body: Joi.object().keys({
     categoryId: Joi.string().custom(objectId),
-    imageUrl: Joi.string().required(),
-    color: Joi.string().required(),
-    font: Joi.string().required(),
-    fontWeight: Joi.string().required()
+    email: Joi.string().email().required(),
+    password: Joi.string().required().custom(password),
   }),
 }
 

@@ -15,6 +15,7 @@ const getQuotes = {
     query: Joi.object().keys({
         title: Joi.string(),
         quote_by: Joi.string(),
+        status: Joi.string()
     }),
 };
 
