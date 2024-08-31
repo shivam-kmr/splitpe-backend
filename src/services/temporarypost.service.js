@@ -23,8 +23,8 @@ const queryTemporaryPosts = async (filter, options) => {
     return temporaryPosts;
 };
 const getPendingTemporaryPosts = async () => {
-    // const temporaryPosts = await TemporaryPost.find({status: 'new'})
-    const temporaryPosts = await TemporaryPost.find({})
+    const temporaryPosts = await TemporaryPost.find({status: 'new'})
+    // const temporaryPosts = await TemporaryPost.find({})
     return temporaryPosts;
 };
 
