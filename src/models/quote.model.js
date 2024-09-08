@@ -10,7 +10,7 @@ const quoteSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      enum: [statusTypes.NEW, statusTypes.PUBLISHED, statusTypes.DELETED],
+      enum: [statusTypes.NEW, statusTypes.PUBLISHED, statusTypes.QUEUED, statusTypes.DELETED],
       required: true,
       default: statusTypes.NEW
   },

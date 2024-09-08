@@ -16,6 +16,10 @@ const temporarypostSchema = mongoose.Schema(
             type: String,
             required: true,
         },
+        quoteId: {
+            type: String,
+            required: true,
+        },
         mediaType: {
             type: String,
             enum: ["image", "video"],
@@ -44,7 +48,7 @@ const temporarypostSchema = mongoose.Schema(
         },
         status: {
             type: String,
-            enum: [statusTypes.NEW, statusTypes.PUBLISHED, statusTypes.DELETED],
+            enum: [statusTypes.NEW, statusTypes.PUBLISHED,statusTypes.QUEUED, statusTypes.DELETED],
             required: true,
             default: statusTypes.NEW
         },

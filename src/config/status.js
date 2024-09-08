@@ -4,6 +4,7 @@ const statusTypes = {
     INACTIVE: 'inactive',
     PUBLISHED: 'published',
     DELETED: 'deleted',
+    QUEUED: 'queued',
   };
   
   module.exports = {

@@ -13,6 +13,7 @@ const createTemporaryPost = {
         caption: Joi.string().required(),
         hashtags: Joi.string().optional(),
         scheduledOn: Joi.date().optional(),
+        quoteId: Joi.string().custom(objectId).required(),
         status: Joi.string().valid(statusTypes.NEW, statusTypes.PUBLISHED, statusTypes.DELETED).optional(),
     }),
 };
@@ -28,6 +29,7 @@ const createBulkTemporaryPost = {
             caption: Joi.string().required(),
             hashtags: Joi.string().optional(),
             scheduledOn: Joi.date().optional(),
+            quoteId: Joi.string().custom(objectId).required(),
             status: Joi.string().valid(statusTypes.NEW, statusTypes.PUBLISHED, statusTypes.DELETED).optional(),
         })
     ).min(1).required(),
@@ -61,6 +63,7 @@ const updateTemporaryPost = {
             caption: Joi.string(),
             hashtags: Joi.string(),
             scheduledOn: Joi.date(),
+            quoteId: Joi.string().custom(objectId),
             status: Joi.string().valid(statusTypes.NEW, statusTypes.PUBLISHED, statusTypes.DELETED),
         })
         .min(1),

@@ -4,6 +4,7 @@ const { get } = require('request-promise');
 
 const temporaryPostService = require('./temporarypost.service');
 const categoryService = require('./category.service');
+const quoteService = require('./quote.service');
 const schedule = require('node-schedule'); // Import node-schedule
 
 const intervalBetweenPosts = 10; // Interval in minutes between each post
@@ -131,6 +132,9 @@ const postToInstagram = async (body) => {
     try {
         let postToPublish = await temporaryPostService.getPendingTemporaryPosts();
         if (postToPublish.length === 0) return { success: false, message: 'No posts to publish' };
+        if( body.scheduleFrom && (new Date(body.scheduleFrom).getTime() < new Date().getTime())) {
+            body.scheduleFrom = new Date();
+        }
         let timeToUploadAt = body.scheduleFrom ? new Date(body.scheduleFrom) : new Date();
         let timeDifference = body.timeDifference || intervalBetweenPosts;
         // Group posts by category ID
@@ -149,6 +153,8 @@ const postToInstagram = async (body) => {
             let categryPostingTime = new Date(timeToUploadAt);
             for (const post of postToPublish[categoryId]) {
                 schedulePost(categoryData, post, categryPostingTime);
+                await temporaryPostService.updateTemporaryPostById(post.id, { status: 'queued', scheduledOn: categryPostingTime });
+                await quoteService.updateQuoteById(post.quoteId, {status: "queued"});
                 console.log(`Scheduled post for category ${categoryId} at ${categryPostingTime.toLocaleString()}`);
                 categryPostingTime = new Date(categryPostingTime.getTime() + timeDifference*60000)
             }
