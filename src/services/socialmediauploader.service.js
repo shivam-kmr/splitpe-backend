@@ -4,6 +4,9 @@ const { get } = require('request-promise');
 
 const temporaryPostService = require('./temporarypost.service');
 const categoryService = require('./category.service');
+const schedule = require('node-schedule'); // Import node-schedule
+
+const intervalBetweenPosts = 10; // Interval in minutes between each post
 
 const loginToInstagram = async (account) => {
     const ig = new IgApiClient();
@@ -124,11 +127,12 @@ const uploadPhotoToInstagram = async (instaAccountInst, imageUrl, caption) => {
     }
 }
 
-const postToInstagram = async () => {
+const postToInstagram = async (body) => {
     try {
         let postToPublish = await temporaryPostService.getPendingTemporaryPosts();
         if (postToPublish.length === 0) return { success: false, message: 'No posts to publish' };
-
+        let timeToUploadAt = body.scheduleFrom ? new Date(body.scheduleFrom) : new Date();
+        let timeDifference = body.timeDifference || intervalBetweenPosts;
         // Group posts by category ID
         postToPublish = postToPublish.reduce((acc, post) => {
             if (!acc[post.categoryId]) acc[post.categoryId] = [];
@@ -141,10 +145,17 @@ const postToInstagram = async () => {
         // Use for...of to handle async operations
         for (let categoryId of Object.keys(postToPublish)) {
             let categoryData = await categoryService.getCategoryById(categoryId);
-            let instaAccountInst = await loginToInstagram({ username: categoryData.email, password: categoryData.password });
+            // let instaAccountInst = await loginToInstagram({ username: categoryData.email, password: categoryData.password });
+            let categryPostingTime = new Date(timeToUploadAt);
+            for (const post of postToPublish[categoryId]) {
+                schedulePost(categoryData, post, categryPostingTime);
+                console.log(`Scheduled post for category ${categoryId} at ${categryPostingTime.toLocaleString()}`);
+                categryPostingTime = new Date(categryPostingTime.getTime() + timeDifference*60000)
+            }
 
-            let uploadPhotoResponse = await uploadPhoto(instaAccountInst, postToPublish[categoryId]);
-            res.push({ categoryId, success: true, message: 'Photo posted successfully!', uploadPhotoResponse })
+            // let uploadPhotoResponse = await uploadPhoto(instaAccountInst, postToPublish[categoryId]);
+            // res.push({ categoryId, success: true, message: 'Photo posted successfully!', uploadPhotoResponse })
+            res.push({ categoryId, success: true, message: 'Post scheduled successfully!' });
         }
 
         return res;  // Make sure to return the result
@@ -153,6 +164,19 @@ const postToInstagram = async () => {
         return { success: false, message: 'An error occurred during the posting process', error };
     }
 };
+
+const schedulePost = (categoryData, post, timeToPostOn) => {
+    const postTime = new Date(timeToPostOn);
+    schedule.scheduleJob(postTime, async () => {
+        console.log(`Posting to Instagram for post id ${post.id} at ${post.scheduledOn}`);
+        try {
+            let instaAccountInst = await loginToInstagram({ username: categoryData.email, password: categoryData.password });
+            await uploadPhoto(instaAccountInst, [post]);
+        } catch (error) {
+            console.error(`Failed to post to Instagram for post id ${post.id}:`, error);
+        }
+    });
+}
 
 
 

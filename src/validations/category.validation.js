@@ -28,6 +28,8 @@ const updateCategory = {
   body: Joi.object()
     .keys({
       name: Joi.string(),
+      email: Joi.string().email().required(),
+      password: Joi.string().required().custom(password),
     })
     .min(1),
 };
@@ -43,8 +45,10 @@ const uploadCategoryImages = {
   }),
   body: Joi.object().keys({
     categoryId: Joi.string().custom(objectId),
-    email: Joi.string().email().required(),
-    password: Joi.string().required().custom(password),
+    imageUrl: Joi.string().required(),
+    color: Joi.string().required(),
+    font: Joi.string().required(),
+    fontWeight: Joi.string().required()
   }),
 }
 
