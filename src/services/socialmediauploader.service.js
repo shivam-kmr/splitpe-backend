@@ -135,6 +135,8 @@ const postToInstagram = async (body) => {
         if( body.scheduleFrom && (new Date(body.scheduleFrom).getTime() < new Date().getTime())) {
             body.scheduleFrom = new Date();
         }
+        //convert ist date to utc
+        body.scheduleFrom = convertISTToUTC(body.scheduleFrom); 
         let timeToUploadAt = body.scheduleFrom ? new Date(body.scheduleFrom) : new Date();
         let timeDifference = body.timeDifference || intervalBetweenPosts;
         // Group posts by category ID
@@ -170,6 +172,11 @@ const postToInstagram = async (body) => {
         return { success: false, message: 'An error occurred during the posting process', error };
     }
 };
+
+const convertISTToUTC = (date) => {
+    let utcDate = new Date(date.getTime() - (330 * 60000));
+    return utcDate;
+}
 
 const schedulePost = (categoryData, post, timeToPostOn) => {
     const postTime = new Date(timeToPostOn);
