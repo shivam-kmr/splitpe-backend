@@ -32,6 +32,24 @@ const logout = async (refreshToken) => {
   await refreshTokenDoc.remove();
 };
 
+const loginUserWithGoogle = async (body) => {
+  let user = await userService.getUserByEmail(body.email);
+  
+  // If user does not exist, create one
+  if (!user) {
+    let newUser = {
+      email: body.email,
+      googleId: body.googleId,
+      name: body.name,
+      password: "SecuredPas@1" + body.googleId,
+      profilePicture: body.picture,
+      isEmailVerified: body.email_verified
+    };
+    user = await userService.createUser(newUser);
+  }
+  return user;
+};
+
 /**
  * Refresh auth tokens
  * @param {string} refreshToken
@@ -96,4 +114,5 @@ module.exports = {
   refreshAuth,
   resetPassword,
   verifyEmail,
+  loginUserWithGoogle
 };

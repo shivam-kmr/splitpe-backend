@@ -55,6 +55,9 @@ const userSchema = mongoose.Schema(
     },
     location:{
       type: Object
+    },
+    profilePicture:{
+      type: String,
     }
   },
   {
