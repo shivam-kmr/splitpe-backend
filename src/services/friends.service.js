@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Friend } = require('../models');
+const { friends } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -8,7 +8,7 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Friend>}
  */
 const addFriend = async (friendBody) => {
-  return Friend.create(friendBody);
+  return friends.create(friendBody);
 };
 
 /**
@@ -21,8 +21,7 @@ const addFriend = async (friendBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryFriends = async (filter, options) => {
-  const friends = await Friend.paginate(filter, options);
-  return friends;
+  return await friends.paginate(filter, options);
 };
 
 /**
@@ -31,7 +30,7 @@ const queryFriends = async (filter, options) => {
  * @returns {Promise<Friend>}
  */
 const getFriendById = async (id) => {
-  return Friend.findById(id);
+  return friends.findById(id);
 };
 
 /**

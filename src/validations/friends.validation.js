@@ -3,8 +3,8 @@ const { objectId } = require('./custom.validation');
 
 const addFriend = {
   body: Joi.object().keys({
-    user: Joi.string().required().custom(objectId),
-    friend: Joi.string().required().custom(objectId),
+    userId: Joi.string().required().custom(objectId),
+    friendId: Joi.string().required().custom(objectId),
   }),
 };
 

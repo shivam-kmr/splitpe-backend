@@ -3,12 +3,12 @@ const { toJSON, paginate } = require('./plugins');
 
 const friendSchema = mongoose.Schema(
   {
-    user: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
-    friend: {
+    friendId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,

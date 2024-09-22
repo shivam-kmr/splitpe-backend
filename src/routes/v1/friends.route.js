@@ -28,7 +28,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /friends:
+ * /friend:
  *   post:
  *     summary: Add a friend
  *     description: Only authenticated users can add friends.
@@ -130,7 +130,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /friends/{friendId}:
+ * /friend/{friendId}:
  *   get:
  *     summary: Get a friend
  *     description: Only authenticated users can fetch their friends by ID.
