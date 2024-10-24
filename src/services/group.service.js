@@ -21,6 +21,13 @@ const createGroup = async (groupBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryGroups = async (filter, options) => {
+  options.populate = [
+    {
+      path: 'members',
+      select: 'name',  // Specify the fields to retrieve from the members array
+    }
+  ];  // Populate userId and friendId
+  options.lean = true;  // Return plain JavaScript objects
   const groups = await Group.paginate(filter, options);
   return groups;
 };

@@ -21,8 +21,14 @@ const addFriend = async (friendBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryFriends = async (filter, options) => {
-  options.populate = 'userId friendId';  // Populate userId and friendId
+  options.populate = [
+    {
+      path: 'friendId',
+      select: 'name',
+    }
+  ];
   options.lean = true;  // Return plain JavaScript objects
+  
   return await friends.paginate(filter, options);
 };
 

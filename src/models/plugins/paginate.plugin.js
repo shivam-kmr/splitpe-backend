@@ -39,17 +39,23 @@ const paginate = (schema) => {
     const countPromise = this.countDocuments(filter).exec();
     let docsPromise = this.find(filter).sort(sort).skip(skip).limit(limit);
 
-    if (options.populate) {
-      options.populate.split(',').forEach((populateOption) => {
-        docsPromise = docsPromise.populate(
-          populateOption
-            .split('.')
-            .reverse()
-            .reduce((a, b) => ({ path: b, populate: a }))
-        );
+    // if (options.populate) {
+    //   options.populate.split(',').forEach((populateOption) => {
+    //     docsPromise = docsPromise.populate(
+    //       populateOption
+    //         .split('.')
+    //         .reverse()
+    //         .reduce((a, b) => ({ path: b, populate: a }))
+    //     );
+    //   });
+    // }
+
+    if (options.populate && Array.isArray(options.populate)) {
+      options.populate.forEach((populateOption) => {
+        docsPromise = docsPromise.populate(populateOption);
       });
     }
-
+    
     docsPromise = docsPromise.exec();
 
     return Promise.all([countPromise, docsPromise]).then((values) => {

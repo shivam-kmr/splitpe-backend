@@ -28,7 +28,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /groups:
+ * /group:
  *   post:
  *     summary: Create a group
  *     description: Only authenticated users can create groups.
@@ -127,7 +127,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /groups/{groupId}:
+ * /group/{groupId}:
  *   get:
  *     summary: Get a group
  *     description: Only authenticated users can fetch their groups by ID.
