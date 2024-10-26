@@ -18,6 +18,38 @@ const settlementSchema = mongoose.Schema({
   },
 })
 
+const splitSchema = mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  amount: {
+    type: Number,
+    required: true,
+  },
+  typeSelected: {
+    type: Number,
+    required: true,
+  },
+  realValue: {
+    type: Number,
+    required: true,
+  }
+})
+
+const paymentSchema = mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  amount: {
+    type: Number,
+    required: true,
+  }
+})
+
 const expenseSchema = mongoose.Schema(
   {
     group: {
@@ -41,6 +73,14 @@ const expenseSchema = mongoose.Schema(
     },
     proposedSettlement: {
       type: [settlementSchema],
+    },
+    splits:{
+      type: [splitSchema],
+      required: true,
+    },
+    payments: {
+      type: [paymentSchema],
+      required: true,
     },
     date: {
       type: Date,
