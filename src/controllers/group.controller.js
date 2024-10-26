@@ -6,6 +6,8 @@ const { groupService } = require('../services');
 
 const createGroup = catchAsync(async (req, res) => {
   let payload =  {...req.body, createdBy: req.user._id}
+  // add self user to group
+  payload.members.push(req.user._id)
   const group = await groupService.createGroup(payload);
   res.status(httpStatus.CREATED).send(group);
 });
