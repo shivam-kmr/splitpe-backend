@@ -25,6 +25,25 @@ const createExpense = async (expenseBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryExpenses = async (filter, options) => {
+  options.populate = [
+    {
+      path: 'proposedSettlement.from',
+      select: 'name',  // Retrieve the 'name' field from the 'from' user in 'proposedSettlement'
+    },
+    {
+      path: 'proposedSettlement.to',
+      select: 'name',  // Retrieve the 'name' field from the 'to' user in 'proposedSettlement'
+    },
+    {
+      path: 'splits.user',
+      select: 'name',  // Retrieve the 'name' field from the 'user' in 'splits'
+    },
+    {
+      path: 'payments.user',
+      select: 'name',  // Retrieve the 'name' field from the 'user' in 'payments'
+    }
+  ];  // Populate userId and friendId
+  options.lean = true;  // Return plain JavaScript objects
   const expenses = await Expense.paginate(filter, options);
   return expenses;
 };
