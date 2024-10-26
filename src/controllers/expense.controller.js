@@ -5,7 +5,8 @@ const catchAsync = require('../utils/catchAsync');
 const { expenseService } = require('../services');
 
 const createExpense = catchAsync(async (req, res) => {
-  const expense = await expenseService.createExpense(req.body);
+  let reqBody = {...req.body, createdBy: req.user.id};
+  const expense = await expenseService.createExpense(reqBody);
   res.status(httpStatus.CREATED).send(expense);
 });
 

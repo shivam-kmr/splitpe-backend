@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { expense: Expense } = require('../models');
 const ApiError = require('../utils/ApiError');
+const expenseSplitService = require('./expensesplit.service');
 
 /**
  * Create an expense
@@ -8,7 +9,10 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Expense>}
  */
 const createExpense = async (expenseBody) => {
-  return Expense.create(expenseBody);
+  let expense = await Expense.create(expenseBody);
+  let splits = await expenseSplitService.processSplits(expense, expenseBody);
+  await updateExpenseById(expense.id, {proposedSettlement: splits});
+  return {expense, settlement: splits};
 };
 
 /**

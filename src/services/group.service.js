@@ -38,8 +38,13 @@ const queryGroups = async (filter, options) => {
  * @returns {Promise<Group>}
  */
 const getGroupById = async (id) => {
-  return Group.findById(id);
-};
+  return Group.findOne({ _id: id })
+    .populate({
+      path: 'members createdBy',
+      select: 'name',
+    })
+    .lean();
+}
 
 /**
  * Update group by id

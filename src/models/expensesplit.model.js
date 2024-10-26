@@ -3,17 +3,21 @@ const { toJSON, paginate } = require('./plugins');
 
 const expenseSplitSchema = mongoose.Schema(
   {
-    expenseId: {
+    expense: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Expense',
       required: true,
     },
-    userId: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
     amount: {
+      type: Number,
+      required: true,
+    },
+    toGetBackAmount: {
       type: Number,
       required: true,
     },

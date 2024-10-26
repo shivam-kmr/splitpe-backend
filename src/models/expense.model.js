@@ -1,9 +1,26 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
+const settlementSchema = mongoose.Schema({
+  from: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  to: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  amount: {
+    type: Number,
+    required: true,
+  },
+})
+
 const expenseSchema = mongoose.Schema(
   {
-    groupId: {
+    group: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Group',
       required: true,
@@ -21,6 +38,9 @@ const expenseSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+    },
+    proposedSettlement: {
+      type: [settlementSchema],
     },
     date: {
       type: Date,

@@ -5,11 +5,15 @@ const createExpense = {
   body: Joi.object().keys({
     description: Joi.string().required(),
     amount: Joi.number().required(),
-    payer: Joi.string().required().custom(objectId),
     group: Joi.string().required().custom(objectId),
-    date: Joi.date().required(),
     splits: Joi.array().items(Joi.object({
+      name:Joi.string().required(),
       user: Joi.string().required().custom(objectId),
+      amount: Joi.number().required(),
+    })).required(),
+    payments: Joi.array().items(Joi.object({
+      user: Joi.string().required().custom(objectId),
+      name:Joi.string().required(),
       amount: Joi.number().required(),
     })).required(),
   }),
@@ -45,6 +49,10 @@ const updateExpense = {
       group: Joi.string().custom(objectId),
       date: Joi.date(),
       splits: Joi.array().items(Joi.object({
+        user: Joi.string().custom(objectId),
+        amount: Joi.number(),
+      })),
+      payments: Joi.array().items(Joi.object({
         user: Joi.string().custom(objectId),
         amount: Joi.number(),
       })),
