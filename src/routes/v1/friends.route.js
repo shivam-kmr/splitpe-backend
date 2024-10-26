@@ -17,6 +17,10 @@ router
   .patch(auth('manageFriends'), validate(friendValidation.updateFriend), friendController.updateFriend)
   .delete(auth('manageFriends'), validate(friendValidation.deleteFriend), friendController.deleteFriend);
 
+router
+  .route('/email')
+  .post(auth('manageFriends'), validate(friendValidation.addFriendByEmail), friendController.addFriendByEmail);
+
 module.exports = router;
 
 /**
@@ -217,4 +221,42 @@ module.exports = router;
  *         $ref: '#/components/responses/Unauthorized'
  *       "404":
  *         $ref: '#/components/responses/NotFound'
+ */
+/**
+ * @swagger
+ * /friend/email:
+ *   post:
+ *     summary: Add a friend by email
+ *     description: Only authenticated users can add friends by email.
+ *     tags: [Friends]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - userId
+ *               - email
+ *             properties:
+ *               userId:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *             example:
+ *               userId: user123
+ *               email: friend@example.com
+ *     responses:
+ *       "201":
+ *         description: Created
+ *         content:
+ *           application/json:
+ *             schema:
+ *                $ref: '#/components/schemas/Friend'
+ *       "400":
+ *         $ref: '#/components/responses/BadRequest'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
  */

@@ -4,6 +4,7 @@ const userService = require('./user.service');
 const {token: Token} = require('../models');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
+const emailService = require('./email.service');
 
 /**
  * Login with username and password
@@ -39,13 +40,22 @@ const loginUserWithGoogle = async (body) => {
   if (!user) {
     let newUser = {
       email: body.email,
-      googleId: body.googleId,
+      socialIdentitifcation: body.googleId,
       name: body.name,
       password: "SecuredPas@1" + body.googleId,
       profilePicture: body.picture,
+      signupStatus: 3,
       isEmailVerified: body.email_verified
     };
     user = await userService.createUser(newUser);
+    emailService.sendSocialWelcomeEmail(user.email);
+  }else if(user && user.signupStatus != 3){
+    user.signupStatus = 3;
+    user.name = body.name;
+    user.socialIdentitifcation = body.googleId;
+    user.profilePicture = body.picture;
+    user.isEmailVerified = body.email_verified;
+    user = await userService.updateUserById(user.id, user);
   }
   return user;
 };

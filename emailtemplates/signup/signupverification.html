@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Verification</title>
+    <style>
+        /* Inline styles will be applied to elements */
+        body, table, td, a {
+            font-family: Arial, sans-serif;
+        }
+        a {
+            color: #0073e6;
+            text-decoration: none;
+        }
+        .button {
+            background-color: #f97316;
+            color: #ffffff;
+            padding: 12px 24px;
+            text-align: center;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body style="margin: 0; padding: 0; background-color: #f4f4f4;">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="center" style="padding: 20px 10px;">
+                <table border="0" cellpadding="0" cellspacing="0" width="600" style="background-color: #ffffff; border-radius: 8px; overflow: hidden;">
+                    <!-- Header Section -->
+                    <tr>
+                        <td align="center" style="padding: 40px 10px; background-color: #365cce; color: #ffffff;">
+                            <h1 style="margin: 0; font-size: 24px;">Thanks for signing up on SplitPe</h1>
+                            <p style="margin: 8px 0 0;">Please verify your email to complete the setup</p>
+                        </td>
+                    </tr>
+                    <!-- Main Content Section -->
+                    <tr>
+                        <td style="padding: 20px; text-align: center;">
+                            <h2 style="color: #333333; font-size: 20px; margin-bottom: 20px;">Verify your E-mail Address</h2>
+                            <p style="color: #666666; font-size: 16px; line-height: 1.5;">Hello, ${userName}</p>
+                            <p style="color: #666666; font-size: 16px; line-height: 1.5;">To verify your email, please click on the button below:</p>
+                            <a href="${verificationLink}" class="button">Verify Email</a>
+                            <p style="color: #666666; font-size: 14px; margin-top: 20px;">
+                                If the button above does not work, please copy and paste the following link into your browser:<br />
+                                <a href="${verificationLink}" style="color: #0073e6;">${verificationLink}</a>
+                            </p>
+                        </td>
+                    </tr>
+                    <!-- Footer Section -->
+                    <tr>
+                        <td style="background-color: #f4f4f4; padding: 20px; text-align: center; color: #999999; font-size: 12px;">
+                            <p style="margin: 0;">This email was sent from <a href="mailto:help@splitpe.in" style="color: #0073e6;">help@splitpe.in</a></p>
+                            <p style="margin: 0;">If you did not request this email, please disregard it.</p>
+                            <p style="margin-top: 10px; font-size: 10px; color: #cccccc;">&copy; 2024 SplitPe. All Rights Reserved.</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

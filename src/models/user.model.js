@@ -44,6 +44,11 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    // 1 - user self signup, 2 - user referred by another user, 3 - social signup,
+    signupStatus:{
+      type: Number,
+      enum: [1, 2, 3],
+    },
     gender: {
       type: String,
     },
@@ -57,6 +62,12 @@ const userSchema = mongoose.Schema(
       type: Object
     },
     profilePicture:{
+      type: String,
+    },
+    socialIdentitifcation:{
+      type: String,
+    },
+    source:{
       type: String,
     }
   },

@@ -43,7 +43,6 @@ const getUserById = async (id) => {
  * @returns {Promise<User>}
  */
 const getUserByEmail = async (email) => {
-  console.log({User})
   return User.findOne({ email });
 };
 
