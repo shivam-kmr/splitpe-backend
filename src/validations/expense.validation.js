@@ -10,6 +10,8 @@ const createExpense = {
       name:Joi.string().required(),
       user: Joi.string().required().custom(objectId),
       amount: Joi.number().required(),
+      realValue: Joi.number().required(),
+      typeSelected: Joi.number().required(),
     })).required(),
     payments: Joi.array().items(Joi.object({
       user: Joi.string().required().custom(objectId),
@@ -51,10 +53,13 @@ const updateExpense = {
       splits: Joi.array().items(Joi.object({
         user: Joi.string().custom(objectId),
         amount: Joi.number(),
+        realValue: Joi.number().required(),
+        typeSelected: Joi.number().required(),
       })),
       payments: Joi.array().items(Joi.object({
-        user: Joi.string().custom(objectId),
-        amount: Joi.number(),
+        user: Joi.string().required().custom(objectId),
+        name:Joi.string().required(),
+        amount: Joi.number().required(),
       })),
     })
     .min(1),
