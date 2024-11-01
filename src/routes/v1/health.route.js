@@ -7,6 +7,11 @@ router
   .route('/')
   .get(healthController.getHealth);
 
+router
+  .route('/template')
+  .post(healthController.checkEmailTemplate)
+    
+
 module.exports = router;
 
 /**

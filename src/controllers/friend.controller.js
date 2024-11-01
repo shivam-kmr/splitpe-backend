@@ -37,6 +37,19 @@ const getFriends = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const getFriendsJson = catchAsync(async (req, res) => {
+  var filter = {userId: req.user.id};
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+
+  options.limit = 100000;
+  const result = await friendsService.queryFriends(filter, options);
+  let friendsJson = {}
+  result.results.forEach(friend => {
+    friendsJson[friend.friendId.id] = friend.friendId.name;
+  });
+  res.send(friendsJson);
+});
+
 const getFriend = catchAsync(async (req, res) => {
   const friend = await friendsService.getFriendById(req.params.friendId);
   if (!friend) {
@@ -59,6 +72,7 @@ module.exports = {
   addFriend,
   addFriendByEmail,
   getFriends,
+  getFriendsJson,
   getFriend,
   updateFriend,
   deleteFriend,

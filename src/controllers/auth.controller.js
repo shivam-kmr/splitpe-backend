@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
+const config = require('../config/config');
 const { authService, userService, tokenService, emailService } = require('../services');
 
 const register = catchAsync(async (req, res) => {
@@ -28,7 +29,12 @@ const refreshTokens = catchAsync(async (req, res) => {
 
 const forgotPassword = catchAsync(async (req, res) => {
   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
-  await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
+  const resetPasswordLink = `${config.website.url}/reset-password?token=${resetPasswordToken}`;
+  const emailObject = {
+    resetPasswordLink,
+    subject: 'Reset Your Password on SplitPe',
+  }
+  await emailService.sendEmailFromTemplate("resetpassword", req.body.email, emailObject);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
@@ -39,6 +45,13 @@ const resetPassword = catchAsync(async (req, res) => {
 
 const sendVerificationEmail = catchAsync(async (req, res) => {
   const verifyEmailToken = await tokenService.generateVerifyEmailToken(req.user);
+  const verificationLink = `${config.website.url}/verify-email?token=${verifyEmailToken}`;
+  const emailObject = {
+    verificationLink,
+    subject: 'Email Verification on SplitPe',
+    userName: req.user.username || "Splitter"
+  }
+  await emailService.sendEmailFromTemplate("signupverification", req.body.email, emailObject);
   await emailService.sendVerificationEmail(req.user.email, verifyEmailToken);
   res.status(httpStatus.NO_CONTENT).send();
 });

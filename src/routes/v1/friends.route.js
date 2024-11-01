@@ -10,6 +10,10 @@ router
   .route('/')
   .post(auth('manageFriends'), validate(friendValidation.addFriend), friendController.addFriend)
   .get(auth('getFriends'), validate(friendValidation.getFriends), friendController.getFriends);
+  
+router
+  .route('/json')
+  .get(auth('getFriends'), validate(friendValidation.getFriendJson), friendController.getFriendsJson);
 
 router
   .route('/:friendId')
@@ -257,6 +261,33 @@ module.exports = router;
  *                $ref: '#/components/schemas/Friend'
  *       "400":
  *         $ref: '#/components/responses/BadRequest'
+ *       "401":
+ *         $ref: '#/components/responses/Unauthorized'
+ */
+
+
+/**
+ * @swagger
+ * /friend/json:
+ *   get:
+ *     summary: Get friends in JSON format
+ *     description: Returns a JSON object mapping friend IDs to their names.
+ *     tags: [Friends]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       "200":
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               additionalProperties:
+ *                 type: string
+ *               example:
+ *                 "671cd87f7a4dd600720c6a60": "Krapal"
+ *                 "671cd89d7a4dd600720c6a6c": "Ashish"
+ *                 "671d37eec2aa0d007116ff4b": "kp chahar"
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  */

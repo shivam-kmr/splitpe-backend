@@ -17,7 +17,14 @@ const addFriendByEmail = {
 
 const getFriends = {
   query: Joi.object().keys({
-    user: Joi.string().custom(objectId),
+    sortBy: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
+  }),
+};
+
+const getFriendJson = {
+  query: Joi.object().keys({
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
@@ -55,4 +62,5 @@ module.exports = {
   getFriend,
   updateFriend,
   deleteFriend,
+  getFriendJson
 };

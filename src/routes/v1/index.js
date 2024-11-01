@@ -11,6 +11,7 @@ const imageuploadRoute = require('./imageupload.route');
 const socialmediauploaderRoute = require('./socialmediauploader.route');
 const temporaryPostRoute = require('./temporarypost.route');
 const categoryRoute = require('./category.route');
+const overviewRoute = require('./overview.route');
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -63,6 +64,10 @@ const defaultRoutes = [
   {
     path: '/temporaryposts',
     route: temporaryPostRoute,
+  },
+  {
+    path: '/overview',
+    route: overviewRoute,
   }
 ];
 

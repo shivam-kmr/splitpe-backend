@@ -3,6 +3,7 @@ const mod = require('../models');
 const { expensesplit: ExpenseSplit } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { use } = require('passport');
+const userBalanceService = require('./userbalance.service');
 
 /**
  * Create an expense split
@@ -86,6 +87,10 @@ const processSplits = async (expense, expenseBody) => {
     }
   }
   let settlements = calculateSettlements(paidMap, ownedMap);
+  // We got settlements, now we need to add on user balance table.
+  settlements.forEach(async settlement => {
+    await userBalanceService.updateUserBalance(settlement.from, settlement.to, settlement.amount);
+  })
   return settlements;
 }
 

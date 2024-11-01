@@ -10,9 +10,9 @@ const expenseSplitService = require('./expensesplit.service');
  */
 const createExpense = async (expenseBody) => {
   let expense = await Expense.create(expenseBody);
-  let splits = await expenseSplitService.processSplits(expense, expenseBody);
+  await expenseSplitService.processSplits(expense, expenseBody);
   await updateExpenseById(expense.id, {proposedSettlement: splits});
-  return {expense, settlement: splits};
+  return {expense};
 };
 
 /**

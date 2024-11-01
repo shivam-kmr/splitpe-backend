@@ -1,5 +1,5 @@
 const allRoles = {
-  user: ['getCategory','manageCategory', 'manageExpense','getFriends','manageFriends', 'manageFriend', 'manageGroups','getGroups','manageQuotes','getQuotes','manageTemporaryPosts','getTemporaryPosts','managePublishingPost',"manageExpenses", "getExpenses"],
+  user: ['getCategory','manageCategory', 'manageExpense','getFriends','manageFriends', 'manageFriend', 'manageGroups','getGroups','manageQuotes','getQuotes','manageTemporaryPosts','getTemporaryPosts','managePublishingPost',"manageExpenses", "getExpenses","getOverview", "validateTemplate"],
   admin: ['getUsers', 'manageUsers', 'getFriends', 'manageFriends'],
 };
 
