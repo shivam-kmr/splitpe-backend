@@ -15,6 +15,7 @@ const createGroup = catchAsync(async (req, res) => {
 const getGroups = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  filter.members = req.user._id;
   const result = await groupService.queryGroups(filter, options);
   res.send(result);
 });

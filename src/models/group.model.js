@@ -18,6 +18,7 @@ const groupSchema = mongoose.Schema(
       ref: 'User',
       required: true,
     }],
+    suggestedSettlement:[Object]
   },
   {
     timestamps: true,

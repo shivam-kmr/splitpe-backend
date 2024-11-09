@@ -13,6 +13,9 @@ const emailVariable = {
     },
     "signupverification": {
         "fieldsToEdit":["verificationLink"]
+    },
+    "userregistrationsuccess": {
+        "fieldsToEdit":["userName"]
     }
 }
 

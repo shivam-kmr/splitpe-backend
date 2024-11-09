@@ -6,6 +6,11 @@ const { authService, userService, tokenService, emailService } = require('../ser
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
   const tokens = await tokenService.generateAuthTokens(user);
+  const emailObject = {
+    userName: user.username || "Splitter",
+    subject: 'Welcome to SplitPe!',
+  }
+  await emailService.sendEmailFromTemplate("userregistrationsuccess", req.body.email, emailObject);
   res.status(httpStatus.CREATED).send({ user, tokens });
 });
 

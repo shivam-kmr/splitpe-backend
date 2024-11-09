@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { group: Group } = require('../models');
 const ApiError = require('../utils/ApiError');
+const overviewService = require('./overview.service');
 
 /**
  * Create a group
@@ -21,14 +22,24 @@ const createGroup = async (groupBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryGroups = async (filter, options) => {
-  options.populate = [
-    {
-      path: 'members',
-      select: 'name',  // Specify the fields to retrieve from the members array
-    }
-  ];  // Populate userId and friendId
-  options.lean = true;  // Return plain JavaScript objects
+  // options.populate = [
+  //   {
+  //     path: 'members',
+  //     select: 'name',  // Specify the fields to retrieve from the members array
+  //   }
+  // ];  // Populate userId and friendId
+  // options.lean = true;  // Return plain JavaScript objects
   const groups = await Group.paginate(filter, options);
+  console.log(groups);
+  const groupsWithSettlement = await Promise.all(
+    groups.results.map(async (grp) => {
+      grp["suggestedSettlement"] = await getUserParticipationInGroupSettlement(filter.members, grp._id);
+      return grp;
+    })
+  );
+  
+  // Modify the groups object with the updated results containing "settlement"
+  groups.results = groupsWithSettlement;
   return groups;
 };
 
@@ -38,12 +49,18 @@ const queryGroups = async (filter, options) => {
  * @returns {Promise<Group>}
  */
 const getGroupById = async (id) => {
-  return Group.findOne({ _id: id })
-    .populate({
-      path: 'members createdBy',
-      select: 'name',
-    })
-    .lean();
+  let group = await Group.findOne({ _id: id })
+    // .populate({
+    //   path: 'members createdBy',
+    //   select: 'name',
+    // })
+    // .lean();
+  if (!group) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Group not found');
+  }else {
+    group["suggestedSettlement"] = await overviewService.calculateGroupSettlement(group._id);
+  }
+  return group;
 }
 
 /**
@@ -75,6 +92,23 @@ const deleteGroupById = async (groupId) => {
   await group.remove();
   return group;
 };
+
+const getUserParticipationInGroupSettlement = async (userId, groupId) => {
+  let groupSettlement = await overviewService.calculateGroupSettlement(groupId);
+  // If user is present in the to / from keys of groupSettlement then have as a part of the settlement
+  const groupsWithSettlement = await Promise.all(
+    groupSettlement.map(async (grp) => {
+      if (grp.from === userId.toString()) {
+        grp["type"] = "owe"
+        return grp;
+      }else if(grp.to === userId.toString()){
+         grp["type"] = "owed"
+        return grp;
+      }
+    })
+  )
+  return groupsWithSettlement;
+}
 
 module.exports = {
   createGroup,
