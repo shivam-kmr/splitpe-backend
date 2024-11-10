@@ -46,13 +46,13 @@ const loginUserWithGoogle = async (body) => {
       name: body.name,
       password: "SecuredPas@1" + body.googleId,
       profilePicture: body.picture,
-      signupStatus: 3,
+      signupStatus: signupTypes.SOCIALSIGNUP,
       isEmailVerified: body.email_verified
     };
     user = await userService.createUser(newUser);
     emailService.sendSocialWelcomeEmail(user.email);
-  }else if(user && user.signupStatus != 3){
-    user.signupStatus = 3;
+  }else if(user && user.signupStatus != signupTypes.SOCIALSIGNUP){
+    user.signupStatus = signupTypes.SOCIALSIGNUP;
     user.name = body.name;
     user.socialIdentitifcation = body.googleId;
     user.profilePicture = body.picture;
