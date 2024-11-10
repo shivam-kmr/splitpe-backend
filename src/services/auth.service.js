@@ -4,6 +4,7 @@ const userService = require('./user.service');
 const {token: Token} = require('../models');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
+const { signupTypes } = require('../config/signupType');
 const emailService = require('./email.service');
 const {jwtDecode} = require('jwt-decode');
 
