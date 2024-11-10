@@ -47,6 +47,10 @@ const addFriendByEmail = catchAsync(async (req, res) => {
     userId: req.user.id,
     friendId: req.body.friendId
   });
+  await friendsService.addFriend({
+    friendId: req.user.id,
+    userId: req.body.friendId
+  });
   // create a group for the two friends.
   const group = await groupService.createGroup({
     name: `${req.user.name} and ${req.body.name}`,
