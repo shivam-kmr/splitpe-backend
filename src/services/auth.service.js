@@ -5,6 +5,7 @@ const {token: Token} = require('../models');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
 const emailService = require('./email.service');
+const {jwtDecode} = require('jwt-decode');
 
 /**
  * Login with username and password
@@ -34,6 +35,7 @@ const logout = async (refreshToken) => {
 };
 
 const loginUserWithGoogle = async (body) => {
+  body = jwtDecode(body.token)
   let user = await userService.getUserByEmail(body.email);
   
   // If user does not exist, create one

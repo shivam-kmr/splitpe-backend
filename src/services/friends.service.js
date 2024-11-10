@@ -42,6 +42,16 @@ const getFriendById = async (id) => {
 };
 
 /**
+ * Get friend by id
+ * @param {ObjectId} id
+ * @returns {Promise<Friend>}
+ */
+const areFriends = async (userId, friendId) => {
+  return await friends.findOne({userId, friendId});
+};
+
+
+/**
  * Update friend by id
  * @param {ObjectId} friendId
  * @param {Object} updateBody
@@ -74,6 +84,7 @@ const deleteFriendById = async (friendId) => {
 module.exports = {
   addFriend,
   queryFriends,
+  areFriends,
   getFriendById,
   updateFriendById,
   deleteFriendById,

@@ -16,7 +16,7 @@ const getOverview = async (userId) => {
     Expense.aggregate([
       { $match: { 'splits.user': userId } },
       { $sort: { createdAt: -1 } },
-      { $limit: 5 },
+      { $limit: 10 },
       { $group: { _id: '$group' } }
     ])
   ]);

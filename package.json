@@ -67,6 +67,7 @@
     "instagram-private-api": "^1.46.1",
     "joi": "^17.3.0",
     "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^4.0.0",
     "moment": "^2.24.0",
     "mongoose": "^5.7.7",
     "morgan": "^1.9.1",

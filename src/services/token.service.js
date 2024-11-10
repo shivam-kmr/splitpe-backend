@@ -25,6 +25,13 @@ const generateToken = (userId, expires, type, secret = config.jwt.secret) => {
   return jwt.sign(payload, secret);
 };
 
+const encryptData = (data, secret = config.jwt.secret) => {
+  return jwt.sign(data, secret);
+}
+const decryptData = (token) => {
+  return jwt.verify(token, config.jwt.secret);
+}
+
 /**
  * Save a token
  * @param {string} token
@@ -115,6 +122,8 @@ const generateVerifyEmailToken = async (user) => {
 
 module.exports = {
   generateToken,
+  encryptData,
+  decryptData,
   saveToken,
   verifyToken,
   generateAuthTokens,

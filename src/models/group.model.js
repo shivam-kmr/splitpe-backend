@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
+const { groupTypes } = require('../config/groupTypes');
 
 const groupSchema = mongoose.Schema(
   {
@@ -18,7 +19,12 @@ const groupSchema = mongoose.Schema(
       ref: 'User',
       required: true,
     }],
-    suggestedSettlement:[Object]
+    suggestedSettlement:[Object],
+    groupType: {
+      type: String,
+      enum: groupTypes,
+      default: 'usercreated',
+    },
   },
   {
     timestamps: true,

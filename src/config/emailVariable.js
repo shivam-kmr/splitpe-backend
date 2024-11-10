@@ -3,7 +3,7 @@ const emailVariable = {
         "fieldsToEdit":["userName", "groupName", "transactionList"]
     },
     "friendrefered": {
-        "fieldsToEdit":["userName", "friendName"]
+        "fieldsToEdit":["userName", "friendName", "signupLink"]
     },
     "resetpassword": {
         "fieldsToEdit":["resetPasswordLink"]
@@ -12,7 +12,7 @@ const emailVariable = {
         "fieldsToEdit":[]
     },
     "signupverification": {
-        "fieldsToEdit":["verificationLink"]
+        "fieldsToEdit":["userName", "verificationLink"]
     },
     "userregistrationsuccess": {
         "fieldsToEdit":["userName"]

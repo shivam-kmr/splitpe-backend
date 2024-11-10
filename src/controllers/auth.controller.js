@@ -34,7 +34,14 @@ const refreshTokens = catchAsync(async (req, res) => {
 
 const forgotPassword = catchAsync(async (req, res) => {
   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
-  const resetPasswordLink = `${config.website.url}/reset-password?token=${resetPasswordToken}`;
+  const context = {
+    token: resetPasswordToken,
+    action: "PASSWORDRESET",
+    email: req.body.email
+  }
+  // encrypt the context body so that we can send it in the url.
+  const encryptedContext = tokenService.encryptData(JSON.stringify(context));
+  const resetPasswordLink = `${config.website.url}/verify?token=${encryptedContext}`;
   const emailObject = {
     resetPasswordLink,
     subject: 'Reset Your Password on SplitPe',
@@ -49,15 +56,22 @@ const resetPassword = catchAsync(async (req, res) => {
 });
 
 const sendVerificationEmail = catchAsync(async (req, res) => {
-  const verifyEmailToken = await tokenService.generateVerifyEmailToken(req.user);
-  const verificationLink = `${config.website.url}/verify-email?token=${verifyEmailToken}`;
+  const context = {
+    token: await tokenService.generateVerifyEmailToken(req.user),
+    action: "ACCOUNTVERIFICATION",
+    email: req.body.email,
+    name: req.user.name
+  }
+  // encrypt the context body so that we can send it in the url.
+  const encryptedContext = tokenService.encryptData(JSON.stringify(context));
+  const verificationLink = `${config.website.url}/verify?token=${encryptedContext}`;
   const emailObject = {
     verificationLink,
     subject: 'Email Verification on SplitPe',
-    userName: req.user.username || "Splitter"
+    userName: req.user.name || "Splitter"
   }
-  await emailService.sendEmailFromTemplate("signupverification", req.body.email, emailObject);
-  await emailService.sendVerificationEmail(req.user.email, verifyEmailToken);
+  console.log({user: req.user})
+  await emailService.sendEmailFromTemplate("signupverification", req.user.email, emailObject);
   res.status(httpStatus.NO_CONTENT).send();
 });
 

@@ -3,6 +3,7 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
+const { signupType } = require('../config/signupType');
 
 const userSchema = mongoose.Schema(
   {
@@ -44,10 +45,10 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    // 1 - user self signup, 2 - user referred by another user, 3 - social signup,
     signupStatus:{
-      type: Number,
-      enum: [1, 2, 3],
+      type: String,
+      enum: signupType,
+      default: "selfsignup",
     },
     gender: {
       type: String,
