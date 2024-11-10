@@ -9,7 +9,7 @@ const emailVariable = {
         "fieldsToEdit":["resetPasswordLink"]
     },
     "signupsocialwelcome": {
-        "fieldsToEdit":[]
+        "fieldsToEdit":["userName", "exploreWebsiteLink"]
     },
     "signupverification": {
         "fieldsToEdit":["userName", "verificationLink"]

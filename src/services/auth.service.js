@@ -5,6 +5,7 @@ const {token: Token} = require('../models');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
 const { signupTypes } = require('../config/signupType');
+const config = require('../config/config');
 const emailService = require('./email.service');
 const {jwtDecode} = require('jwt-decode');
 
@@ -51,7 +52,11 @@ const loginUserWithGoogle = async (body) => {
       isEmailVerified: body.email_verified
     };
     user = await userService.createUser(newUser);
-    emailService.sendSocialWelcomeEmail(user.email);
+    await emailService.sendEmailFromTemplate("signupsocialwelcome", user.email, {
+      userName: user.name,
+      exploreWebsiteLink: `${config.website.url}`,
+      subject: `Welcome to SplitPe Family ${user.name}!`,
+    }); 
   }else if(user && user.signupStatus != signupTypes.SOCIALSIGNUP){
     user.signupStatus = signupTypes.SOCIALSIGNUP;
     user.name = body.name;
