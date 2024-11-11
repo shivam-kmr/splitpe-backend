@@ -13,6 +13,7 @@ const getGroups = {
   query: Joi.object().keys({
     name: Joi.string(),
     sortBy: Joi.string(),
+    groupType: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
   }),

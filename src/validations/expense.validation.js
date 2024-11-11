@@ -7,7 +7,6 @@ const createExpense = {
     amount: Joi.number().required(),
     group: Joi.string().required().custom(objectId),
     splits: Joi.array().items(Joi.object({
-      name:Joi.string().required(),
       user: Joi.string().required().custom(objectId),
       amount: Joi.number().required(),
       realValue: Joi.number().required(),
@@ -15,7 +14,6 @@ const createExpense = {
     })).required(),
     payments: Joi.array().items(Joi.object({
       user: Joi.string().required().custom(objectId),
-      name:Joi.string().required(),
       amount: Joi.number().required(),
     })).required(),
   }),

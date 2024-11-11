@@ -78,6 +78,7 @@ const getFriendsJson = catchAsync(async (req, res) => {
   result.results.forEach(friend => {
     friendsJson[friend.friendId.id] = friend.friendId.name;
   });
+  friendsJson[req.user.id] = req.user.name;
   res.send(friendsJson);
 });
 

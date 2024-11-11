@@ -32,10 +32,10 @@ const processSplits = async (expense, expenseBody) => {
   paidMap = createMap(expenseBody.payments);
   ownedMap = createMap(expenseBody.splits);
 
-  let summaryTextArray = [];
+  // let summaryTextArray = [];
 
   for(let own in ownedMap) {
-    let {user, amount, name} = ownedMap[own];
+    let {user, amount} = ownedMap[own];
     let toGetBackAmount = 0;
     if(!paidMap[user]){
       toGetBackAmount = -amount;
@@ -45,7 +45,7 @@ const processSplits = async (expense, expenseBody) => {
         amount: amount,
         toGetBackAmount: toGetBackAmount
       })
-      summaryTextArray.push(`${name} owes ${amount} to the group`);
+      // summaryTextArray.push(`${name} owes ${amount} to the group`);
     } else if(paidMap[user].amount > amount) {
       toGetBackAmount = paidMap[user].amount - amount
       createExpenseSplit({
@@ -54,7 +54,7 @@ const processSplits = async (expense, expenseBody) => {
         amount: amount,
         toGetBackAmount: toGetBackAmount
       })
-      summaryTextArray.push(`${name} lent ${toGetBackAmount} to the group`);
+      // summaryTextArray.push(`${name} lent ${toGetBackAmount} to the group`);
     }else if(paidMap[user].amount == amount) {
       toGetBackAmount = 0;
       createExpenseSplit({
@@ -63,7 +63,7 @@ const processSplits = async (expense, expenseBody) => {
         amount: amount,
         toGetBackAmount: toGetBackAmount
       })
-      summaryTextArray.push(`${name} paid for his share`);
+      // summaryTextArray.push(`${name} paid for his share`);
     }
     else if(paidMap[user].amount < amount){
       toGetBackAmount = -amount + paidMap[user].amount;
@@ -73,7 +73,7 @@ const processSplits = async (expense, expenseBody) => {
         amount: amount,
         toGetBackAmount: toGetBackAmount
       })
-      summaryTextArray.push(`${name} owes ${toGetBackAmount} to the group`);
+      // summaryTextArray.push(`${name} owes ${toGetBackAmount} to the group`);
     } 
     else{
       toGetBackAmount = -amount;
@@ -83,7 +83,7 @@ const processSplits = async (expense, expenseBody) => {
         amount: amount,
         toGetBackAmount: toGetBackAmount
       })
-      summaryTextArray.push(`${name} owes ${amount} to the group`);
+      // summaryTextArray.push(`${name} owes ${amount} to the group`);
     }
   }
   let settlements = calculateSettlements(paidMap, ownedMap);
@@ -160,8 +160,7 @@ function createMap(payments) {
     if(!paidMap[payment.user]) {
       paidMap[payment.user] = {
         user: payment.user,
-        amount: 0,
-        name: payment.name
+        amount: 0
       };
     }
     paidMap[payment.user].amount += payment.amount;
