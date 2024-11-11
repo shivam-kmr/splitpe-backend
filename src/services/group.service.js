@@ -30,7 +30,6 @@ const queryGroups = async (filter, options) => {
   // ];  // Populate userId and friendId
   // options.lean = true;  // Return plain JavaScript objects
   const groups = await Group.paginate(filter, options);
-  console.log(groups);
   const groupsWithSettlement = await Promise.all(
     groups.results.map(async (grp) => {
       grp["suggestedSettlement"] = await getUserParticipationInGroupSettlement(filter.members, grp._id);
