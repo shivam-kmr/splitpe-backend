@@ -2,6 +2,7 @@
 const UserBalance = require('../models/userbalance.model');
 const Expense = require('../models/expense.model');
 const Group = require('../models/group.model');
+const User = require('../models/user.model');
 
 /**
  * Retrieves an overview of the user's financial standing, including
@@ -108,4 +109,8 @@ const simplifyDebts = (debtMap) => {
   return simplifiedDebts;
 };
 
-module.exports = { getOverview, calculateGroupSettlement };
+const getUserById = async (id) => {
+  return await User.findById(id, {name:1})
+}
+
+module.exports = { getOverview, calculateGroupSettlement, getUserById };

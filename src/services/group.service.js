@@ -32,6 +32,10 @@ const queryGroups = async (filter, options) => {
   const groups = await Group.paginate(filter, options);
   const groupsWithSettlement = await Promise.all(
     groups.results.map(async (grp) => {
+      if(grp.groupType=="personal"){
+        let usr = await overviewService.getUserById(grp.members.filter(member=>member!=filter.members.toString())[0])
+        grp["name"] = usr.name
+      }
       grp["suggestedSettlement"] = await getUserParticipationInGroupSettlement(filter.members, grp._id);
       return grp;
     })
