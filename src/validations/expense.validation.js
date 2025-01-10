@@ -56,7 +56,6 @@ const updateExpense = {
       })),
       payments: Joi.array().items(Joi.object({
         user: Joi.string().required().custom(objectId),
-        name:Joi.string().required(),
         amount: Joi.number().required(),
       })),
     })

@@ -11,7 +11,7 @@ const expenseSplitService = require('./expensesplit.service');
 const createExpense = async (expenseBody) => {
   let expense = await Expense.create(expenseBody);
   let splits = await expenseSplitService.processSplits(expense, expenseBody);
-  await updateExpenseById(expense.id, {proposedSettlement: splits});
+  await updateExpenseById(expense.id, {proposedSettlement: splits}, true);
   return {expense};
 };
 
@@ -63,15 +63,28 @@ const getExpenseById = async (id) => {
  * @param {Object} updateBody
  * @returns {Promise<Expense>}
  */
-const updateExpenseById = async (expenseId, updateBody) => {
+const updateExpenseById = async (expenseId, updateBody, isNew=false) => {
   const expense = await getExpenseById(expenseId);
   if (!expense) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Expense not found');
   }
+
+  // Check if critical fields have changed
+  const fieldsRequiringReprocessing = ['amount', 'splits', 'payments'];
+  const reprocessRequired = fieldsRequiringReprocessing.some((field) => updateBody[field] !== undefined);
+
   Object.assign(expense, updateBody);
+
+  if (reprocessRequired) {
+    // Recalculate splits and settlements
+    const splits = await expenseSplitService.processSplits(expense, updateBody, isNew);
+    expense.proposedSettlement = splits;
+  }
+
   await expense.save();
   return expense;
 };
+
 
 /**
  * Delete expense by id

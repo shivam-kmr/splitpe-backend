@@ -6,7 +6,7 @@ const UserBalance = require('../models/userbalance.model');
  * If `fromUser` owes `toUser`, `amount` is positive.
  * If `toUser` owes `fromUser`, `amount` is negative.
  */
-const updateUserBalance = async (fromUser, toUser, amount) => {
+const updateUserBalance = async (fromUser, toUser, amount, expenseId) => {
     // Find existing balance or create a new one
     let userBalance = await UserBalance.findOne({ from: fromUser, to: toUser });
 
@@ -23,6 +23,7 @@ const updateUserBalance = async (fromUser, toUser, amount) => {
         userBalance = new UserBalance({
             from: fromUser,
             to: toUser,
+            expense: expenseId,
             balance: amount,
         });
         await userBalance.save();
@@ -76,9 +77,14 @@ const getBalancesForUser = async (userId) => {
     };
 };
 
+const removeBalanceForExpense = async (expenseId) => {
+    await UserBalance.deleteMany({ expense: expenseId });
+}
+
 
 module.exports = {
     updateUserBalance,
     settlePayment,
-    getBalancesForUser
+    getBalancesForUser,
+    removeBalanceForExpense
 };

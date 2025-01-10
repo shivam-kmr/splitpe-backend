@@ -17,6 +17,11 @@ const userBalanceSchema = mongoose.Schema({
     required: true,
     default: 0,  // Positive if 'from' owes 'to'; negative if 'to' owes 'from'.
   },
+  expense: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Expense',
+    required: true,
+  }
 }, {
   timestamps: true,
 });
