@@ -4,10 +4,8 @@ const logger = require('../config/logger');
 class RedisService {
   constructor(config) {
     this.client = createClient({
-      socket: {
-        url: config.redis.url,
-        reconnectStrategy: (retries) => Math.min(retries * 50, 2000),
-      },
+      url: config.redis.url,
+      reconnectStrategy: (retries) => Math.min(retries * 50, 2000),
     });
 
     this.client.on('connect', () => {
