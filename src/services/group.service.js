@@ -2,121 +2,114 @@ const httpStatus = require('http-status');
 const { group: Group } = require('../models');
 const ApiError = require('../utils/ApiError');
 const overviewService = require('./overview.service');
+const BaseService = require('./base.service');
 
-/**
- * Create a group
- * @param {Object} groupBody
- * @returns {Promise<Group>}
- */
-const createGroup = async (groupBody) => {
-  return Group.create(groupBody);
-};
+class GroupService extends BaseService {
+  constructor() {
+    super();
+  }
 
-/**
- * Query for groups
- * @param {Object} filter - Mongo filter
- * @param {Object} options - Query options
- * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
- * @param {number} [options.limit] - Maximum number of results per page (default = 10)
- * @param {number} [options.page] - Current page (default = 1)
- * @returns {Promise<QueryResult>}
- */
-const queryGroups = async (filter, options) => {
-  // options.populate = [
-  //   {
-  //     path: 'members',
-  //     select: 'name',  // Specify the fields to retrieve from the members array
-  //   }
-  // ];  // Populate userId and friendId
-  // options.lean = true;  // Return plain JavaScript objects
-  const groups = await Group.paginate(filter, options);
-  const groupsWithSettlement = await Promise.all(
-    groups.results.map(async (grp) => {
-      if(grp.groupType=="personal"){
-        let usr = await overviewService.getUserById(grp.members.filter(member=>member!=filter.members.toString())[0])
-        grp["name"] = usr.name
-      }
-      grp["suggestedSettlement"] = await getUserParticipationInGroupSettlement(filter.members, grp._id);
-      return grp;
-    })
-  );
-  
-  // Modify the groups object with the updated results containing "settlement"
-  groups.results = groupsWithSettlement;
-  return groups;
-};
+  /**
+   * Create a group
+   * @param {Object} groupBody
+   * @returns {Promise<Group>}
+   */
+  async createGroup(groupBody) {
+    return Group.create(groupBody);
+  }
 
-/**
- * Get group by id
- * @param {ObjectId} id
- * @returns {Promise<Group>}
- */
-const getGroupById = async (id) => {
-  let group = await Group.findOne({ _id: id })
-    // .populate({
-    //   path: 'members createdBy',
-    //   select: 'name',
-    // })
-    // .lean();
-  if (!group) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Group not found');
-  }else {
+  /**
+   * Query for groups
+   * @param {Object} filter - Mongo filter
+   * @param {Object} options - Query options
+   * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
+   * @param {number} [options.limit] - Maximum number of results per page (default = 10)
+   * @param {number} [options.page] - Current page (default = 1)
+   * @returns {Promise<QueryResult>}
+   */
+  async queryGroups(filter, options) {
+    const groups = await Group.paginate(filter, options);
+    const groupsWithSettlement = await Promise.all(
+      groups.results.map(async (grp) => {
+        if (grp.groupType === 'personal') {
+          let usr = await overviewService.getUserById(grp.members.filter(member => member !== filter.members.toString())[0]);
+          grp["name"] = usr.name;
+        }
+        grp["suggestedSettlement"] = await this.getUserParticipationInGroupSettlement(filter.members, grp._id);
+        return grp;
+      })
+    );
+
+    groups.results = groupsWithSettlement;
+    return groups;
+  }
+
+  /**
+   * Get group by id
+   * @param {ObjectId} id
+   * @returns {Promise<Group>}
+   */
+  async getGroupById(id) {
+    let group = await Group.findOne({ _id: id });
+    if (!group) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Group not found');
+    }
     group["suggestedSettlement"] = await overviewService.calculateGroupSettlement(group._id);
+    return group;
   }
-  return group;
+
+  /**
+   * Update group by id
+   * @param {ObjectId} groupId
+   * @param {Object} updateBody
+   * @returns {Promise<Group>}
+   */
+  async updateGroupById(groupId, updateBody) {
+    const group = await this.getGroupById(groupId);
+    if (!group) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Group not found');
+    }
+    Object.assign(group, updateBody);
+    await group.save();
+    return group;
+  }
+
+  /**
+   * Delete group by id
+   * @param {ObjectId} groupId
+   * @returns {Promise<Group>}
+   */
+  async deleteGroupById(groupId) {
+    const group = await this.getGroupById(groupId);
+    if (!group) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Group not found');
+    }
+    await group.remove();
+    return group;
+  }
+
+  /**
+   * Get user participation in group settlement
+   * @param {ObjectId} userId
+   * @param {ObjectId} groupId
+   * @returns {Promise<Settlement[]>}
+   */
+  async getUserParticipationInGroupSettlement(userId, groupId) {
+    let groupSettlement = await overviewService.calculateGroupSettlement(groupId);
+
+    const groupsWithSettlement = await Promise.all(
+      groupSettlement.map(async (grp) => {
+        if (grp.from === userId.toString()) {
+          grp["type"] = "owe";
+          return grp;
+        } else if (grp.to === userId.toString()) {
+          grp["type"] = "owed";
+          return grp;
+        }
+      })
+    );
+    return groupsWithSettlement.filter(Boolean); // Remove undefined values
+  }
 }
 
-/**
- * Update group by id
- * @param {ObjectId} groupId
- * @param {Object} updateBody
- * @returns {Promise<Group>}
- */
-const updateGroupById = async (groupId, updateBody) => {
-  const group = await getGroupById(groupId);
-  if (!group) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Group not found');
-  }
-  Object.assign(group, updateBody);
-  await group.save();
-  return group;
-};
-
-/**
- * Delete group by id
- * @param {ObjectId} groupId
- * @returns {Promise<Group>}
- */
-const deleteGroupById = async (groupId) => {
-  const group = await getGroupById(groupId);
-  if (!group) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Group not found');
-  }
-  await group.remove();
-  return group;
-};
-
-const getUserParticipationInGroupSettlement = async (userId, groupId) => {
-  let groupSettlement = await overviewService.calculateGroupSettlement(groupId);
-  // If user is present in the to / from keys of groupSettlement then have as a part of the settlement
-  const groupsWithSettlement = await Promise.all(
-    groupSettlement.map(async (grp) => {
-      if (grp.from === userId.toString()) {
-        grp["type"] = "owe"
-        return grp;
-      }else if(grp.to === userId.toString()){
-         grp["type"] = "owed"
-        return grp;
-      }
-    })
-  )
-  return groupsWithSettlement;
-}
-
-module.exports = {
-  createGroup,
-  queryGroups,
-  getGroupById,
-  updateGroupById,
-  deleteGroupById,
-};
+module.exports = new GroupService();

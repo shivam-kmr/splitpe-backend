@@ -7,9 +7,11 @@ dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 const envVarsSchema = Joi.object()
   .keys({
+    APP_NAME: Joi.string().required().description('Appname'),
     NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
     PORT: Joi.number().default(3000),
     MONGODB_URL: Joi.string().required().description('Mongo DB url'),
+    REDIS_URL: Joi.string().required().description('Redis host'),
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(30).description('minutes after which access tokens expire'),
     JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(30).description('days after which refresh tokens expire'),
@@ -39,6 +41,7 @@ if (error) {
 module.exports = {
   env: envVars.NODE_ENV,
   port: envVars.PORT,
+  appname: envVars.APP_NAME,
   mongoose: {
     url: envVars.MONGODB_URL + (envVars.NODE_ENV === 'test' ? '-test' : ''),
     options: {
@@ -46,6 +49,9 @@ module.exports = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     },
+  },
+  redis:{
+    url: envVars.REDIS_URL,
   },
   jwt: {
     secret: envVars.JWT_SECRET,

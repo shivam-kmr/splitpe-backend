@@ -6,10 +6,7 @@ const docsRoute = require('./docs.route');
 const expenseRoute = require('./expense.route');
 const friendsRoute = require('./friends.route');
 const groupsRoute = require('./group.route');
-const quoteRoute = require('./quote.route');
 const imageuploadRoute = require('./imageupload.route');
-const socialmediauploaderRoute = require('./socialmediauploader.route');
-const temporaryPostRoute = require('./temporarypost.route');
 const categoryRoute = require('./category.route');
 const overviewRoute = require('./overview.route');
 const config = require('../../config/config');
@@ -50,20 +47,8 @@ const defaultRoutes = [
     route: docsRoute,
   },
   {
-    path: '/quotes',
-    route: quoteRoute,
-  },
-  {
     path: '/image',
     route: imageuploadRoute,
-  },
-  {
-    path: '/socialmedia',
-    route: socialmediauploaderRoute,
-  },
-  {
-    path: '/temporaryposts',
-    route: temporaryPostRoute,
   },
   {
     path: '/overview',

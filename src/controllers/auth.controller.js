@@ -10,7 +10,7 @@ const register = catchAsync(async (req, res) => {
     userName: user.username || "Splitter",
     subject: 'Welcome to SplitPe!',
   }
-  await emailService.sendEmailFromTemplate("userregistrationsuccess", req.body.email, emailObject);
+  emailService.sendEmailFromTemplate("userregistrationsuccess", req.body.email, emailObject);
   res.status(httpStatus.CREATED).send({ user, tokens });
 });
 
@@ -46,7 +46,7 @@ const forgotPassword = catchAsync(async (req, res) => {
     resetPasswordLink,
     subject: 'Reset Your Password on SplitPe',
   }
-  await emailService.sendEmailFromTemplate("resetpassword", req.body.email, emailObject);
+  emailService.sendEmailFromTemplate("resetpassword", req.body.email, emailObject);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
@@ -71,7 +71,7 @@ const sendVerificationEmail = catchAsync(async (req, res) => {
     userName: req.user.name || "Splitter"
   }
   console.log({user: req.user})
-  await emailService.sendEmailFromTemplate("signupverification", req.user.email, emailObject);
+  emailService.sendEmailFromTemplate("signupverification", req.user.email, emailObject);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
