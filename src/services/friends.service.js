@@ -1,13 +1,13 @@
 const httpStatus = require('http-status');
-const { friends, user } = require('../models');
+const { friends } = require('../models');
 const ApiError = require('../utils/ApiError');
-const emailService = require('./email.service');
-const tokenService = require('./token.service');
 const { signupTypes } = require('../config/signupType');
 const { groupTypes } = require('../config/groupTypes');
 const config = require('../config/config');
 const BaseService = require('./base.service');
 const pick = require('../utils/pick');
+const emailService = require('./email.service').getInst();
+const tokenService = require('./token.service').getInst();
 
 const KEY_EXPIRY_DURATION = 86400;  // Cache expiry duration
 
@@ -132,8 +132,8 @@ class FriendService extends BaseService {
   }
 
   // Fetch all friends for user as JSON (caching included)
-  async getFriendsJson(userId, query) {
-    let friendMapping = await this.redis.get(`${config.appname}:${userId}:friendmapping`);
+  async getFriendsJson(user, query) {
+    let friendMapping = await this.redis.get(`${config.appname}:${user.id}:friendmapping`);
     
     if (friendMapping) {
       return JSON.parse(friendMapping);
@@ -142,16 +142,16 @@ class FriendService extends BaseService {
     const options = pick(query, ['sortBy', 'limit', 'page']);
     options.limit = 100000;
 
-    const result = await this.queryFriends({ userId }, options);
+    const result = await this.queryFriends({ userId: user.id }, options);
     let friendsJson = {};
 
     result.results.forEach(friend => {
       friendsJson[friend.friendId.id] = friend.friendId.name;
     });
 
-    friendsJson[userId] = userId;  // Add user's own name
+    friendsJson[user.id] = user.name;  // Add user's own name
 
-    await this.redis.set(`${config.appname}:${userId}:friendmapping`, JSON.stringify(friendsJson), "NX", KEY_EXPIRY_DURATION);
+    await this.redis.set(`${config.appname}:${user.id}:friendmapping`, JSON.stringify(friendsJson), "NX", KEY_EXPIRY_DURATION);
     return friendsJson;
   }
   async flushUserRedis(userId){
@@ -159,4 +159,8 @@ class FriendService extends BaseService {
   }
 }
 
-module.exports = new FriendService();
+module.exports = {
+  getInst: function () {
+    return new FriendService();
+  },
+}

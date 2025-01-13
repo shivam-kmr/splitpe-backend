@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { settlementService } = require('../services');
+const settlementService = require('../services/settlement.service').getInst();
 
 const createSettlement = catchAsync(async (req, res) => {
   const settlement = await settlementService.createSettlement(req.body);

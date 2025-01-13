@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { emailService } = require('../services');
+const emailService = require('../services/email.service').getInst();
 
 const getHealth = catchAsync(async (req, res) => {
   const serverDate = new Date()

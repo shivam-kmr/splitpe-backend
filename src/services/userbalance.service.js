@@ -82,4 +82,8 @@ class BalanceService extends BaseService {
   }
 }
 
-module.exports = new BalanceService();
+module.exports = {
+    getInst: function () {
+      return new BalanceService();
+    },
+}  

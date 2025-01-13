@@ -3,6 +3,7 @@ const { settlement: Settlement } = require('../models');
 const ApiError = require('../utils/ApiError');
 const BaseService = require('./base.service');
 
+
 class SettlementService extends BaseService {
   constructor() {
     super();
@@ -71,4 +72,8 @@ class SettlementService extends BaseService {
   }
 }
 
-module.exports = new SettlementService();
+module.exports = {
+  getInst: function () {
+    return new SettlementService();
+  },
+}

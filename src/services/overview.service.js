@@ -124,4 +124,8 @@ class OverviewService extends BaseService {
   }
 }
 
-module.exports = new OverviewService();
+module.exports = {
+  getInst: function () {
+    return new OverviewService();
+  },
+}

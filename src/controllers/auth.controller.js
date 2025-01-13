@@ -1,7 +1,10 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const config = require('../config/config');
-const { authService, userService, tokenService, emailService } = require('../services');
+const authService = require('../services/auth.service').getInst();
+const userService = require('../services/user.service').getInst();
+const tokenService = require('../services/token.service').getInst();
+const emailService = require('../services/email.service').getInst();
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);

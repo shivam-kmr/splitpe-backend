@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { expenseService } = require('../services');
+const expenseService = require('../services/expense.service').getInst();
 
 const createExpense = catchAsync(async (req, res) => {
   let reqBody = {...req.body, createdBy: req.user.id};

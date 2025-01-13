@@ -2,11 +2,11 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const httpStatus = require('http-status');
 const config = require('../config/config');
-const userService = require('./user.service');
 const { token: Token } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
 const BaseService = require('./base.service'); // BaseService for common logic
+const userService = require('./user.service').getInst();
 
 class TokenService extends BaseService {
   constructor() {
@@ -139,4 +139,8 @@ class TokenService extends BaseService {
   }
 }
 
-module.exports = new TokenService();
+module.exports = {
+  getInst: function () {
+    return new TokenService();
+  },
+}

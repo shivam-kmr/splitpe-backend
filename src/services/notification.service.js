@@ -68,4 +68,8 @@ class NotificationService extends BaseService {
   }
 }
 
-module.exports = new NotificationService();
+module.exports = {
+  getInst: function () {
+    return new NotificationService();
+  },
+}

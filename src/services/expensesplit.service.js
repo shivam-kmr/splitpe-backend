@@ -1,8 +1,8 @@
 const httpStatus = require('http-status');
 const { expense: Expense, expensesplit: ExpenseSplit } = require('../models');
 const ApiError = require('../utils/ApiError');
-const userBalanceService = require('./userbalance.service');
 const BaseService = require('./base.service');
+const userBalanceService = require('./userbalance.service').getInst();
 
 class ExpenseSplitService extends BaseService {
   constructor() {
@@ -230,4 +230,8 @@ class ExpenseSplitService extends BaseService {
   }
 }
 
-module.exports = new ExpenseSplitService();
+module.exports = {
+  getInst: function () {
+    return new ExpenseSplitService();
+  },
+}

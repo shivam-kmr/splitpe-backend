@@ -1,8 +1,8 @@
 const httpStatus = require('http-status');
 const { group: Group } = require('../models');
 const ApiError = require('../utils/ApiError');
-const overviewService = require('./overview.service');
 const BaseService = require('./base.service');
+const overviewService = require('./overview.service').getInst();
 
 class GroupService extends BaseService {
   constructor() {
@@ -112,4 +112,9 @@ class GroupService extends BaseService {
   }
 }
 
-module.exports = new GroupService();
+module.exports = {
+  getInst: function () {
+    return new GroupService();
+  },
+}
+

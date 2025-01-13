@@ -1,6 +1,6 @@
 // controllers/overview.controller.js
 const httpStatus = require('http-status');
-const overviewService = require('../services/overview.service');
+const overviewService = require('../services/overview.service').getInst();
 
 /**
  * Controller to handle the overview request for the dashboard.

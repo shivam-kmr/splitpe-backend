@@ -126,4 +126,8 @@ class EmailService extends BaseService {
   }
 }
 
-module.exports = new EmailService();
+module.exports = {
+  getInst: function () {
+    return new EmailService();
+  },
+}

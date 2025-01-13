@@ -3,6 +3,8 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { expenseSplitService } = require('../services');
+const expenseSplitService = require('../services/expensesplit.service').getInst();
+
 
 const createExpenseSplit = catchAsync(async (req, res) => {
   const expenseSplit = await expenseSplitService.createExpenseSplit(req.body);

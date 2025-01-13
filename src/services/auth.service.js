@@ -1,13 +1,16 @@
-const httpStatus = require('http-status');
-const tokenService = require('./token.service');
+
 const BaseService = require('./base.service');
-const userService = require('./user.service');
+const emailService = require('./email.service').getInst();
+const userService = require('./user.service').getInst();
+const tokenService = require('./token.service').getInst();
+
 const { token: Token } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
 const { signupTypes } = require('../config/signupType');
 const config = require('../config/config');
-const emailService = require('./email.service');
+
+const httpStatus = require('http-status');
 const { jwtDecode } = require('jwt-decode');
 
 class AuthService extends BaseService {

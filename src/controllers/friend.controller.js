@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { friendsService } = require('../services');
+const friendsService = require('../services/friends.service').getInst();
 
 const addFriend = catchAsync(async (req, res) => {
   const friend = await friendsService.addFriend(req.body, req.user);
@@ -22,7 +22,7 @@ const getFriends = catchAsync(async (req, res) => {
 });
 
 const getFriendsJson = catchAsync(async (req, res) => {
-  const friendsJson = await friendsService.getFriendsJson(req.user.id, req.query);
+  const friendsJson = await friendsService.getFriendsJson(req.user, req.query);
   res.send(friendsJson);
 });
 
