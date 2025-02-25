@@ -12,7 +12,8 @@ const checkEmailTemplate = catchAsync(async (req, res) => {
   let body = req.body;
   //const emailResponse = await emailService.sendFriendReferredEmail(body.fromFriend, body.toFriend, body.to);
   //const emailResponse = await emailService.sendResetPasswordEmail(body.to, "token");
-  const emailResponse = await emailService.sendNewExpenseEntryEmail(body.to,body.userName, body.groupName, body.transactionList);
+  // const emailResponse = await emailService.sendNewExpenseEntryEmail(body.to,body.userName, body.groupName, body.transactionList);
+  const emailResponse = await emailService.sendEmailFromTemplate("anuragtemplate", body.email, body)
   res.send(emailResponse);
 });
 
